@@ -1,5 +1,5 @@
 {
-  "count": 2,
+  "count": 3,
   "offset": 0,
   "limit": 10,
   "data": [
@@ -12,7 +12,7 @@
       "transferMethodCountry": "US",
       "transferMethodCurrency": "USD",
       "branchId": "021000021",
-      "bankAccountId": "4111222233330000",
+      "bankAccountId": "4111222233331234",
       "bankAccountRelationship": "SELF",
       "bankAccountPurpose": "SAVINGS",
       "profileType": "INDIVIDUAL",
@@ -48,7 +48,7 @@
         "transferMethodCountry": "CANADA",
         "transferMethodCurrency": "CAD",
         "branchId": "021000021",
-        "bankAccountId": "4111222233330011",
+        "bankAccountId": "4111222233331235",
         "bankAccountRelationship": "SELF",
         "bankAccountPurpose": "SAVINGS",
         "profileType": "INDIVIDUAL",
@@ -66,6 +66,28 @@
         "stateProvince": "CA",
         "country": "US",
         "postalCode": "12345",
+        "links": [
+            {
+                "params": {
+                    "rel": "self"
+                },
+                "href": "https://localhost.com/rest/v3/users/usr-token/transfer-methods/trm-token"
+            }
+        ]
+    },
+    {
+        "token": "trm-token",
+        "type": "PREPAID_CARD",
+        "status": "ACTIVATED",
+        "verificationStatus": "NOT_REQUIRED",
+        "createdOn": "2019-07-24T21:08:43",
+        "transferMethodCountry": "US",
+        "transferMethodCurrency": "USD",
+        "cardType": "VIRTUAL",
+        "cardPackage": "L1",
+        "cardNumber": "************4281",
+        "cardBrand": "VISA",
+        "dateOfExpiry": "2023-07",
         "links": [
             {
                 "params": {

@@ -9,7 +9,7 @@ class TransferFunds {
 
     var addSelectDestinationSectionLabel: XCUIElement
 
-    var addSelectDestinationPlaceholder: XCUIElement
+    var addSelectDestinationPlaceholderString: String
 
     var addSelectDestinationLabel: XCUIElement
 
@@ -50,24 +50,23 @@ class TransferFunds {
 
         addSelectDestinationSectionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
-        addSelectDestinationLabel = app.tables["createTransferTableView"].staticTexts["createTransferAddSelectDestinationCellTextLabel"]
+        addSelectDestinationLabel = app.tables["createTransferTableView"].staticTexts["transferDestinationTitleLabel"]
 
-        addSelectDestinationPlaceholder = app.tables["createTransferTableView"].staticTexts["createTransferAddSelectDestinationCellTextLabel"]
+        addSelectDestinationPlaceholderString = ""
 
-
-        addSelectDestinationDetailLabel = app.tables["createTransferTableView"].staticTexts["createTransferAddSelectDestinationCellDetailTextLabel"]
+        addSelectDestinationDetailLabel = app.tables["createTransferTableView"].staticTexts["transferDestinationSubtitleLabel"]
 
         transferSectionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
-        transferAmountLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferAmountLabel = app.tables["createTransferTableView"].staticTexts["transferAmountTitleLabel"]
 
-        transferAmount = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferAmount = app.tables["createTransferTableView"].staticTexts["transferAmountTextField"]
 
-        transferCurrency = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferCurrency = app.tables["createTransferTableView"].staticTexts["transferAmountCurrencyLabel"]
 
-        transferAllFundsLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferAllFundsLabel = app.tables["createTransferTableView"].staticTexts["transferAllFundsTitleLabel"]
 
-        transferAllFundsSwitch = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferAllFundsSwitch = app.tables["createTransferTableView"].staticTexts["transferAllFundsSwitch"]
 
         availableForTransferLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
@@ -77,11 +76,12 @@ class TransferFunds {
 
         notesPlaceHolderString = "transfer_description".localized()
 
-        notesDescription = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        notesDescription = app.tables["createTransferTableView"].staticTexts["transferNotesTextField"]
 
         notesDescriptionOptionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
         availableBalance = app.tables["createTransferTableView"].staticTexts["available_balance_footer"]
-        nextButton = app.tables["createTransferTableView"].staticTexts["add_transfer_next_button"]
+
+        nextButton = app.tables["createTransferTableView"].staticTexts["addTransferNextButton"]
     }
 }
