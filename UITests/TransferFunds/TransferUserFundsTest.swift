@@ -53,6 +53,10 @@ class TransferUserFundsTest: BaseTests {
      Then first available transfer method will be selected
      */
     func testTransferFunds_firstAvailableMethodIsSelected() {
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
+
         mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
                              filename: "ListMoreThanOneTransferMethod",
                              method: HTTPMethod.get)
@@ -80,7 +84,7 @@ class TransferUserFundsTest: BaseTests {
         XCTAssertTrue(transferFunds.transferAllFundsSwitch.exists, "Transfer all funds switch should exist")
 
         XCTAssertEqual(transferFunds.notesSectionLabel.label, "NOTES")
-        XCTAssertEqual(transferFunds.notesPlaceHolder.label, "Description")
+        XCTAssertEqual(transferFunds.notesDescription.label, "Description")
 
         // Assert "Transfer all funds"
         XCTAssertTrue(transferFunds.nextButton.exists && transferFunds.nextButton.isEnabled)
@@ -110,9 +114,9 @@ class TransferUserFundsTest: BaseTests {
 
         // Amount row
         XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
-        XCTAssertEqual(transferFunds.transferCurrency.label, "")
+        XCTAssertEqual(transferFunds.transferCurrency.label, "USD")
         // TODO: Switch to another bank account
-        XCTAssertEqual(transferFunds.transferCurrency.label, "")
+        // XCTAssertEqual(transferFunds.transferCurrency.label, "JPY")
     }
 
     /*
@@ -145,10 +149,10 @@ class TransferUserFundsTest: BaseTests {
         // TODO: implement assertion
         // TODO: Assert Note entry
         XCTAssertEqual(transferFunds.notesSectionLabel.label, "NOTES")
-        XCTAssertEqual(transferFunds.notesPlaceHolder.label, "Description")
+        XCTAssertEqual(transferFunds.notesDescription.label, "Description")
         let testInput = "Transfer test"
-        transferFunds.notesPlaceHolder.clearAndEnterText(text: testInput)
-        XCTAssertEqual(transferFunds.notesPlaceHolder.label, testInput)
+        //transferFunds.notesPlaceHolder.clearAndEnterText(text: testInput)
+        //XCTAssertEqual(transferFunds.notesDescription.label, testInput)
     }
 
     func testTransferFund_createTransferWithAllFunds() {

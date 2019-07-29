@@ -24,6 +24,28 @@
                     "href": "https://localhost.com/rest/v3/users/usr-token/transfer-methods/trm-token"
                 }
             ]
+        },
+        {
+            "token": "trm-token",
+            "type": "PREPAID_CARD",
+            "status": "ACTIVATED",
+            "verificationStatus": "NOT_REQUIRED",
+            "createdOn": "2019-07-23T22:08:43",
+            "transferMethodCountry": "US",
+            "transferMethodCurrency": "USD",
+            "cardType": "VIRTUAL",
+            "cardPackage": "L1",
+            "cardNumber": "************4292",
+            "cardBrand": "VISA",
+            "dateOfExpiry": "2023-12",
+            "links": [
+                {
+                    "params": {
+                        "rel": "self"
+                    },
+                    "href": "https://localhost.com/rest/v3/users/usr-token/transfer-methods/trm-token"
+                }
+            ]
         }
     ],
     "links": [
