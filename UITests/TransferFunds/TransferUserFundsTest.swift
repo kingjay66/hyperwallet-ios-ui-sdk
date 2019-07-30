@@ -33,6 +33,10 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
+
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
@@ -53,10 +57,6 @@ class TransferUserFundsTest: BaseTests {
      Then first available transfer method will be selected
      */
     func testTransferFunds_firstAvailableMethodIsSelected() {
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
-                             method: HTTPMethod.get)
-
         mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
                              filename: "ListMoreThanOneTransferMethod",
                              method: HTTPMethod.get)
@@ -64,6 +64,10 @@ class TransferUserFundsTest: BaseTests {
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
+
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
 
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
@@ -103,6 +107,10 @@ class TransferUserFundsTest: BaseTests {
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
+
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
 
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
@@ -164,6 +172,10 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.get)
 
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
+
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "CreateTransferWithFX",
                              method: HTTPMethod.post)
@@ -200,6 +212,10 @@ class TransferUserFundsTest: BaseTests {
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
+
+        mockServer.setupStub(url: "/rest/v3/users/usr-token",
+                             filename: "GetUser",
+                             method: HTTPMethod.get)
 
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "createTransferWithFX",
