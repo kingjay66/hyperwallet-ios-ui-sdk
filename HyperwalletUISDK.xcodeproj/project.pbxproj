@@ -55,7 +55,7 @@
 		41EC060922EF925300D6BE1C /* TransferErrorAmountLessThantFee.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EC05F722EF925300D6BE1C /* TransferErrorAmountLessThantFee.json */; };
 		41EC060A22EF925300D6BE1C /* TransferStatusQuoted.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EC05F822EF925300D6BE1C /* TransferStatusQuoted.json */; };
 		41EC060B22EF925300D6BE1C /* TransferErrorOverMaxAmount.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EC05F922EF925300D6BE1C /* TransferErrorOverMaxAmount.json */; };
-		41EC060D22EFB46300D6BE1C /* GetUser.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EC060C22EFB46300D6BE1C /* GetUser.json */; };
+		41EC061222EFC05200D6BE1C /* GetUser.json in Resources */ = {isa = PBXBuildFile; fileRef = 41EC060C22EFB46300D6BE1C /* GetUser.json */; };
 		4A31BDB722D762AE0027DACA /* PrepaidCardReceiptRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A31BDB622D762AE0027DACA /* PrepaidCardReceiptRepositoryTests.swift */; };
 		4A31BDB922D762CE0027DACA /* ReceiptRepositoryFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A31BDB822D762CE0027DACA /* ReceiptRepositoryFactoryTests.swift */; };
 		4A37DB9222E8AFEE0085A329 /* Transfer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4A9A7BDF22E859E60022E573 /* Transfer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -2568,6 +2568,7 @@
 				0961D62F22AA861A007F0B44 /* ReceiptsForOneMonth.json in Resources */,
 				41EC060122EF925300D6BE1C /* ListMoreThanOneTransferMethod.json in Resources */,
 				98F63E6B2284AC330090101D /* PayPalAccountInvalidEmailResponse.json in Resources */,
+				41EC061222EFC05200D6BE1C /* GetUser.json in Resources */,
 				9807B76B226442C60028A280 /* TransferMethodConfigurationBankAccountResponse.json in Resources */,
 				4157135D22C42E9F005D6DB1 /* PrepaidCardReceiptsForOneMonth.json in Resources */,
 				41EC060022EF925300D6BE1C /* CreateTransferWithoutFX.json in Resources */,
@@ -2602,7 +2603,6 @@
 				DB46798F2260380D00E1AF49 /* LaunchScreen.storyboard in Resources */,
 				DB46798C2260380D00E1AF49 /* Assets.xcassets in Resources */,
 				DB46798A2260380C00E1AF49 /* Main.storyboard in Resources */,
-				41EC060D22EFB46300D6BE1C /* GetUser.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
