@@ -35,7 +35,7 @@ class TransferFunds {
 
     var notesPlaceHolderString: String
 
-    var notesDescription: XCUIElement
+    var notesDescriptionTextField: XCUIElement
 
     var notesDescriptionOptionLabel: XCUIElement
 
@@ -46,9 +46,14 @@ class TransferFunds {
     init(app: XCUIApplication) {
         self.app = app
 
-        transferFundTitle = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferFundTitle = app.navigationBars["Transfer Funds"].staticTexts["Transfer Funds"]
 
-        addSelectDestinationSectionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+ // "DESTINATIONS"
+
+        addSelectDestinationSectionLabel =
+            app.tables["createTransferTableView"]
+            .staticTexts.containing(.staticText, identifier: "DESTINATION")
+            .element(matching: NSPredicate(format: "label CONTAINS[c] 'DESTINATION'"))
 
         addSelectDestinationLabel = app.tables["createTransferTableView"].staticTexts["transferDestinationTitleLabel"]
 
@@ -56,7 +61,9 @@ class TransferFunds {
 
         addSelectDestinationDetailLabel = app.tables["createTransferTableView"].staticTexts["transferDestinationSubtitleLabel"]
 
-        transferSectionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        transferSectionLabel = app.tables["createTransferTableView"]
+            .staticTexts.containing(.staticText, identifier: "TRANSFER")
+            .element(matching: NSPredicate(format: "label CONTAINS[c] 'TRANSFER'"))
 
         transferAmountLabel = app.tables["createTransferTableView"].staticTexts["transferAmountTitleLabel"]
 
@@ -66,22 +73,35 @@ class TransferFunds {
 
         transferAllFundsLabel = app.tables["createTransferTableView"].staticTexts["transferAllFundsTitleLabel"]
 
-        transferAllFundsSwitch = app.tables["createTransferTableView"].staticTexts["transferAllFundsSwitch"]
+        transferAllFundsSwitch = app.tables["createTransferTableView"].switches["transferAllFundsSwitch"]
 
         availableForTransferLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
         availableForAmount = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
-        notesSectionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
+        notesSectionLabel = app.tables["createTransferTableView"] .staticTexts.containing(.staticText, identifier: "NOTES")
+            .element(matching: NSPredicate(format: "label CONTAINS[c] 'NOTES'"))
 
         notesPlaceHolderString = "transfer_description".localized()
 
-        notesDescription = app.tables["createTransferTableView"].staticTexts["transferNotesTextField"]
+        notesDescriptionTextField = app.tables["createTransferTableView"].textFields["transferNotesTextField"]
 
         notesDescriptionOptionLabel = app.tables["createTransferTableView"].staticTexts["receiptTransactionTypeLabel"]
 
         availableBalance = app.tables["createTransferTableView"].staticTexts["available_balance_footer"]
 
-        nextButton = app.tables["createTransferTableView"].staticTexts["addTransferNextButton"]
+        nextButton = app.tables["createTransferTableView"].buttons["addTransferNextButton"]
+    }
+
+    func toggleTransferAllFundsSwitch() {
+        transferAllFundsSwitch.tap()
+    }
+
+    func enterNotes(description: String) {
+        notesDescriptionTextField.typeText(description)
+    }
+
+    func enterTransferAmount(amount: String) {
+        amount.forEach { digit in transferAmount.typeText(String(digit)) }
     }
 }
