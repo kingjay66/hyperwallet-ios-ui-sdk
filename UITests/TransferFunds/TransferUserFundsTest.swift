@@ -13,6 +13,11 @@ class TransferUserFundsTest: BaseTests {
             .containing(.staticText, identifier: "Transfer Funds")
             .element(boundBy: 0)
         transferFunds = TransferFunds(app: app)
+
+//        mockServer.setupStub(url: "/rest/v3/users/usr-token/authentication-token",
+//                             filename: "AuthenticationTokenResponse",
+//                             method: HTTPMethod.post)
+
     }
 
     override func tearDown() {
@@ -33,22 +38,18 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
-                             method: HTTPMethod.get)
-
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
 
         // Assert Add Destination Section
         // how to we assert the icon
-        XCTAssertEqual(transferFunds.addSelectDestinationSectionLabel.label, "DESTINATION")
-        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Add Account")
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
         XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "An account hasn't been set up yet, please add an account first")
 
         //  TODO: Tab to Add Account (we will not assert at this point)
-        XCTAssertTrue(transferFunds.transferCurrency.exists, "Transfer Currency should not exist")
+        XCTAssertFalse(transferFunds.transferCurrency.exists, "Transfer Currency should not exist")
     }
 
     /*
@@ -65,33 +66,37 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
-                             method: HTTPMethod.get)
-
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
-
-        // Assert Add Destination Section
-        XCTAssertEqual(transferFunds.addSelectDestinationSectionLabel.label, "DESTINATION")
+        // Add Destination Section
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
         XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
-        XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "")
-        // Assert Transfer Section
 
-        XCTAssertEqual(transferFunds.transferSectionLabel.label, "TRANSER")
+         if #available(iOS 11.0, *) {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States\nEnding on 1234")
+         } else {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States Ending on 1234")
+         }
+        // Transfer Section
+        XCTAssertTrue(transferFunds.transferSectionLabel.exists)
         // Amount row
         XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
-        XCTAssertEqual(transferFunds.transferCurrency.label, "")
+        XCTAssertEqual(transferFunds.transferCurrency.label, "USD")
         // Transfer all funds row
         XCTAssertEqual(transferFunds.transferAllFundsLabel.label, "Transfer all funds")
         XCTAssertTrue(transferFunds.transferAllFundsSwitch.exists, "Transfer all funds switch should exist")
 
-        XCTAssertEqual(transferFunds.notesSectionLabel.label, "NOTES")
-        XCTAssertEqual(transferFunds.notesDescription.label, "Description")
+       // Notes
+       XCTAssertTrue(transferFunds.notesSectionLabel.exists)
+       XCTAssertEqual(transferFunds.notesDescriptionTextField.placeholderValue, "Description")
 
-        // Assert "Transfer all funds"
-        XCTAssertTrue(transferFunds.nextButton.exists && transferFunds.nextButton.isEnabled)
+       let availableFunds = app.tables["createTransferTableView"].staticTexts["Available for transfer: 452.14"]
+       XCTAssertTrue(availableFunds.exists)
+
+       // Next Button
+       XCTAssertTrue(transferFunds.nextButton.exists)
     }
 
     /*
@@ -108,23 +113,20 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
-                             method: HTTPMethod.get)
-
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
 
-        // TODO: implement assertion
         //  1. Select Destination (USD)
-        // the currency of the method will be shown AND the Currency Abbreviation should be adapted based on the Destination account selected
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
 
         // Amount row
         XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
         XCTAssertEqual(transferFunds.transferCurrency.label, "USD")
+        // 2. Select Destination (CAD)
         // TODO: Switch to another bank account
-        // XCTAssertEqual(transferFunds.transferCurrency.label, "JPY")
+        XCTAssertEqual(transferFunds.transferCurrency.label, "CAD")
     }
 
     /*
@@ -157,10 +159,9 @@ class TransferUserFundsTest: BaseTests {
         // TODO: implement assertion
         // TODO: Assert Note entry
         XCTAssertEqual(transferFunds.notesSectionLabel.label, "NOTES")
-        XCTAssertEqual(transferFunds.notesDescription.label, "Description")
-        let testInput = "Transfer test"
-        //transferFunds.notesPlaceHolder.clearAndEnterText(text: testInput)
-        //XCTAssertEqual(transferFunds.notesDescription.label, testInput)
+       // XCTAssertEqual(transferFunds.notesDescription.label, "Description")
+        transferFunds.enterNotes(description: "testing")
+        XCTAssertEqual(transferFunds.notesDescriptionTextField.title, "testing")
     }
 
     func testTransferFund_createTransferWithAllFunds() {
@@ -170,10 +171,6 @@ class TransferUserFundsTest: BaseTests {
 
         mockServer.setupStub(url: "/rest/v3/transfers",
                              filename: "AvailableFundUSD",
-                             method: HTTPMethod.get)
-
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
                              method: HTTPMethod.get)
 
         mockServer.setupStub(url: "/rest/v3/transfers",
@@ -213,17 +210,42 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token",
-                             filename: "GetUser",
-                             method: HTTPMethod.get)
-
         mockServer.setupStub(url: "/rest/v3/transfers",
-                             filename: "createTransferWithFX",
+                             filename: "CreateTransferWithFX",
                              method: HTTPMethod.get)
 
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
+
+        // Add Destination Section
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
+
+        if #available(iOS 11.0, *) {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States\nEnding on 6789")
+        } else {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States Ending on 6789")
+        }
+        // Transfer Section
+        XCTAssertTrue(transferFunds.transferSectionLabel.exists)
+        // Amount row
+        XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
+        XCTAssertEqual(transferFunds.transferCurrency.label, "USD")
+        // Transfer all funds row
+        XCTAssertEqual(transferFunds.transferAllFundsLabel.label, "Transfer all funds")
+        XCTAssertTrue(transferFunds.transferAllFundsSwitch.exists, "Transfer all funds switch should exist")
+
+        // Notes
+        XCTAssertTrue(transferFunds.notesSectionLabel.exists)
+        XCTAssertEqual(transferFunds.notesDescriptionTextField.placeholderValue, "Description")
+
+        let availableFunds = app.tables["createTransferTableView"].staticTexts["Available for transfer: 452.14"]
+        XCTAssertTrue(availableFunds.exists)
+
+        // Next Button
+        XCTAssertTrue(transferFunds.nextButton.exists)
     }
 
     func testTransferFund_createTransferWithoutFX() {
@@ -236,12 +258,44 @@ class TransferUserFundsTest: BaseTests {
                              method: HTTPMethod.post)
 
         mockServer.setupStub(url: "/rest/v3/transfers",
-                             filename: "createTransferWithoutFX",
+                             filename: "CreateTransferWithoutFX",
                              method: HTTPMethod.get)
 
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
+
+        // Add Destination Section
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
+
+        if #available(iOS 11.0, *) {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States\nEnding on 6789")
+        } else {
+            XCTAssertEqual(transferFunds.addSelectDestinationDetailLabel.label, "United States Ending on 6789")
+        }
+        // Transfer Section
+        XCTAssertTrue(transferFunds.transferSectionLabel.exists)
+        // Amount row
+        XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
+        XCTAssertEqual(transferFunds.transferCurrency.label, "USD")
+        // Transfer all funds row
+        XCTAssertEqual(transferFunds.transferAllFundsLabel.label, "Transfer all funds")
+        XCTAssertTrue(transferFunds.transferAllFundsSwitch.exists, "Transfer all funds switch should exist")
+
+        // Notes
+        XCTAssertTrue(transferFunds.notesSectionLabel.exists)
+        XCTAssertEqual(transferFunds.notesDescriptionTextField.placeholderValue, "Description")
+
+        let availableFunds = app.tables["createTransferTableView"].staticTexts["Available for transfer: 452.14"]
+        XCTAssertTrue(availableFunds.exists)
+
+        // Next Button
+        XCTAssertTrue(transferFunds.nextButton.exists)
+        transferFunds.nextButton.tap()
+
+        // TODO: do we need to assert confirmation ?
     }
 
     /*
@@ -263,12 +317,16 @@ class TransferUserFundsTest: BaseTests {
         transferFundMenu.tap()
         waitForNonExistence(spinner)
 
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
+
         XCTAssertEqual(transferFunds.transferSectionLabel.label, "TRANSER")
         XCTAssertEqual(transferFunds.transferAmountLabel.label, "Amount")
         XCTAssertEqual(transferFunds.transferCurrency.label, "JPY")
 
-        XCTAssertEqual(transferFunds.availableForTransferLabel.label, "Available for transfer")
-        XCTAssertEqual(transferFunds.availableBalance.label, "")
+        let availableFunds = app.tables["createTransferTableView"].staticTexts["Available for transfer: 10000"]
+        XCTAssertTrue(availableFunds.exists)
     }
 
     /* Given that user is on the Transfer fund page and selected a Transfer Destination
@@ -286,6 +344,10 @@ class TransferUserFundsTest: BaseTests {
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
+
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        XCTAssertEqual(transferFunds.addSelectDestinationLabel.label, "Bank Account")
 
         // TODO: Validate the transfer amount input
         transferFunds.transferAmount.typeText("9")
@@ -343,13 +405,21 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundUSD",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
-                             filename: "TransferErrorOverMaxAmount",
-                             method: HTTPMethod.get)
-
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
+
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        transferFunds.enterTransferAmount(amount: "10000")
+
+        // Next Button
+        XCTAssertTrue(transferFunds.nextButton.exists)
+        transferFunds.nextButton.tap()
+
+        mockServer.setupStub(url: "/rest/v3/transfers",
+                             filename: "TransferErrorLimitExceeded",
+                             method: HTTPMethod.post)
 
         // TODO: implement assertion
         XCTAssert(app.alerts["Error"].exists)
@@ -360,7 +430,7 @@ class TransferUserFundsTest: BaseTests {
 
     /* Given that Transfer methods exist And insufficient funds to transfer
      When user transfers the fund
-     Then the over available Fund error occurs and the app should display the error
+     Then Amount Less than fee error occurs and the app should display the error
      */
     func testTransferFund_createTransferInsufficientFundsError() {
         mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
@@ -371,13 +441,21 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundInsufficient",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
-                             filename: "TransferErrorAmountLessThantFee",
-                             method: HTTPMethod.get)
-
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
         waitForNonExistence(spinner)
+
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        transferFunds.enterTransferAmount(amount: "10000")
+
+        // Next Button
+        XCTAssertTrue(transferFunds.nextButton.exists)
+        transferFunds.nextButton.tap()
+
+        mockServer.setupStub(url: "/rest/v3/transfers",
+                             filename: "TransferErrorAmountLessThantFee",
+                             method: HTTPMethod.get)
 
         XCTAssert(app.alerts["Error"].exists)
         let predicate = NSPredicate(format:
@@ -385,7 +463,10 @@ class TransferUserFundsTest: BaseTests {
         XCTAssert(app.alerts["Error"].staticTexts.element(matching: predicate).exists)
     }
 
-    // ??
+    /* Given that Transfer methods exist And insufficient funds to transfer
+       When user transfers the fund
+       Then You do not have enough funds occurs and the app should display the error
+     */
     func testTransferFund_createTransferMinimumAmountError() {
         mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
                              filename: "ListOneBankAccountTransferUSD",
@@ -395,9 +476,38 @@ class TransferUserFundsTest: BaseTests {
                              filename: "AvailableFundZero",
                              method: HTTPMethod.post)
 
-        mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
-                             filename: "transfer_error_amount_less_than_the_fee",
+        XCTAssertTrue(transferFunds.transferFundTitle.exists)
+        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+        transferFunds.enterTransferAmount(amount: "10000")
+
+        XCTAssertTrue(transferFundMenu.exists)
+        transferFundMenu.tap()
+        waitForNonExistence(spinner)
+
+        // Next Button
+        XCTAssertTrue(transferFunds.nextButton.exists)
+        transferFunds.nextButton.tap()
+
+        mockServer.setupStub(url: "/rest/v3/transfers",
+                             filename: "TransferErrorOverAvailableFund",
                              method: HTTPMethod.get)
+
+        XCTAssert(app.alerts["Error"].exists)
+        let predicate = NSPredicate(format:
+            "label CONTAINS[c] 'You do not have enough funds in any single currency to complete this transfer'")
+        XCTAssert(app.alerts["Error"].staticTexts.element(matching: predicate).exists)
+    }
+
+    func testTransferFund_createTransferInvalidSourceError() {
+        mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
+                             filename: "ListMoreThanOneTransferMethod",
+                             method: HTTPMethod.get)
+
+        mockServer.setupStub(url: "/rest/v3/transfers",
+                             filename: "AvailableFundUSD",
+                             method: HTTPMethod.post)
+
+        // TODO: ADD the Invalid Source Error mock
 
         XCTAssertTrue(transferFundMenu.exists)
         transferFundMenu.tap()
@@ -405,13 +515,27 @@ class TransferUserFundsTest: BaseTests {
 
         XCTAssert(app.alerts["Error"].exists)
         let predicate = NSPredicate(format:
-            "label CONTAINS[c] 'Amount is less than the fee amount'")
+            "label CONTAINS[c] ''")
         XCTAssert(app.alerts["Error"].staticTexts.element(matching: predicate).exists)
     }
 
-    func testTransferFund_createTransferInvalidSourceError() {
-    }
-
     func testTransferFund_createTransferConnectionError() {
+        mockServer.setupStub(url: "/rest/v3/users/usr-token/transfer-methods",
+                             filename: "ListMoreThanOneTransferMethod",
+                             method: HTTPMethod.get)
+
+        mockServer.setupStub(url: "/rest/v3/transfers",
+                             filename: "UnexpectedErrorResponse",
+                             method: HTTPMethod.post)
+
+        // TODO: ADD the Connection Error mock
+
+        XCTAssertTrue(transferFundMenu.exists)
+        transferFundMenu.tap()
+        waitForNonExistence(spinner)
+
+        let predicate = NSPredicate(format:
+            "label CONTAINS[c] ''")
+        XCTAssert(app.alerts["Error"].staticTexts.element(matching: predicate).exists)
     }
 }
