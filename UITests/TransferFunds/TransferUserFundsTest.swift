@@ -409,9 +409,9 @@ class TransferUserFundsTest: BaseTests {
         transferFundMenu.tap()
         waitForNonExistence(spinner)
 
-        XCTAssertTrue(transferFunds.transferFundTitle.exists)
-        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
-        transferFunds.enterTransferAmount(amount: "10000")
+//          XCTAssertTrue(transferFunds.transferFundTitle.exists)
+//        XCTAssertTrue(transferFunds.addSelectDestinationSectionLabel.exists)
+//        transferFunds.enterTransferAmount(amount: "10000")
 
         // Next Button
         XCTAssertTrue(transferFunds.nextButton.exists)
@@ -535,7 +535,8 @@ class TransferUserFundsTest: BaseTests {
         waitForNonExistence(spinner)
 
         let predicate = NSPredicate(format:
-            "label CONTAINS[c] ''")
-        XCTAssert(app.alerts["Error"].staticTexts.element(matching: predicate).exists)
+            "label CONTAINS[c] 'We are encountering a problem processing the request. Please check your connectivity'")
+
+         XCTAssertTrue(app.alerts["Connectivity Issue"].staticTexts.element(matching: predicate).exists)
     }
 }
