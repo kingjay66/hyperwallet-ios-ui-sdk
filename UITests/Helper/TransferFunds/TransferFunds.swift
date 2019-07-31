@@ -41,7 +41,7 @@ class TransferFunds {
 
     var availableBalance: XCUIElement
 
-    var nextButton: XCUIElement
+    var nextLabel: XCUIElement
 
     init(app: XCUIApplication) {
         self.app = app
@@ -67,7 +67,7 @@ class TransferFunds {
 
         transferAmountLabel = app.tables["createTransferTableView"].staticTexts["transferAmountTitleLabel"]
 
-        transferAmount = app.tables["createTransferTableView"].staticTexts["transferAmountTextField"]
+        transferAmount = app.tables["createTransferTableView"].textFields["transferAmountTextField"]
 
         transferCurrency = app.tables["createTransferTableView"].staticTexts["transferAmountCurrencyLabel"]
 
@@ -90,7 +90,7 @@ class TransferFunds {
 
         availableBalance = app.tables["createTransferTableView"].staticTexts["available_balance_footer"]
 
-        nextButton = app.tables["createTransferTableView"].buttons["addTransferNextButton"]
+        nextLabel = app.tables["createTransferTableView"].staticTexts["addTransferNextLabel"]
     }
 
     func toggleTransferAllFundsSwitch() {
@@ -102,6 +102,6 @@ class TransferFunds {
     }
 
     func enterTransferAmount(amount: String) {
-        amount.forEach { digit in transferAmount.typeText(String(digit)) }
+        transferAmount.clearAndEnterText(text: amount)
     }
 }
