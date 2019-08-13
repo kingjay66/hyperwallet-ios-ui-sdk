@@ -122,6 +122,8 @@
 		98F63E6E2284AD370090101D /* PayPalAccountDuplicateResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 98F63E6C2284AD330090101D /* PayPalAccountDuplicateResponse.json */; };
 		98F63E6F2284AD9B0090101D /* AddTransferMethodPayPalAccountTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F63E64228485930090101D /* AddTransferMethodPayPalAccountTests.swift */; };
 		98F63E722284B4AF0090101D /* TransferMethodConfigurationPayPalAccountResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 98F63E712284B4AF0090101D /* TransferMethodConfigurationPayPalAccountResponse.json */; };
+		BA27C5E222FC5A08005FDAB7 /* TransferFundsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27C5E122FC5A08005FDAB7 /* TransferFundsTests.swift */; };
+		BAFA596522FD74C6002AACE3 /* TransferFunds.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFA596422FD74C6002AACE3 /* TransferFunds.swift */; };
 		C345BFC22289E6EC0049E67B /* XCUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C345BFC02289E6EC0049E67B /* XCUIElement.swift */; };
 		C358A9A52272644000E5AE47 /* AddTransferMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C358A9A22272644000E5AE47 /* AddTransferMethod.swift */; };
 		C358A9A62272644000E5AE47 /* ListTransferMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = C358A9A32272644000E5AE47 /* ListTransferMethods.swift */; };
@@ -718,6 +720,8 @@
 		98F63E6C2284AD330090101D /* PayPalAccountDuplicateResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PayPalAccountDuplicateResponse.json; sourceTree = "<group>"; };
 		98F63E712284B4AF0090101D /* TransferMethodConfigurationPayPalAccountResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = TransferMethodConfigurationPayPalAccountResponse.json; sourceTree = "<group>"; };
 		98F63E732284EE890090101D /* PayPalAccountResponse.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PayPalAccountResponse.json; sourceTree = "<group>"; };
+		BA27C5E122FC5A08005FDAB7 /* TransferFundsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFundsTests.swift; sourceTree = "<group>"; };
+		BAFA596422FD74C6002AACE3 /* TransferFunds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferFunds.swift; sourceTree = "<group>"; };
 		C345BFC02289E6EC0049E67B /* XCUIElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCUIElement.swift; sourceTree = "<group>"; };
 		C358A9A22272644000E5AE47 /* AddTransferMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTransferMethod.swift; sourceTree = "<group>"; };
 		C358A9A32272644000E5AE47 /* ListTransferMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTransferMethods.swift; sourceTree = "<group>"; };
@@ -1253,7 +1257,6 @@
 				4A2B94A822F1C81F000A0F14 /* CreateTransferRequestHelper.swift */,
 				4A9A7C1722E89BEB0022E573 /* HyperwalletTestHelper.swift */,
 				4A2B94A422F1C7BD000A0F14 /* TransferMethodRepositoryRequestHelper.swift */,
-				078C6EFF22EF81A900CF81EE /* TransferRequestHelper.swift */,
 				4A2B949D22F1BD8E000A0F14 /* UserRepositoryRequestHelper.swift */,
 				078C6EFF22EF81A900CF81EE /* TransferRequestHelper.swift */,
 			);
@@ -1376,6 +1379,22 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		BA27C5E022FC59B1005FDAB7 /* TranferFunds */ = {
+			isa = PBXGroup;
+			children = (
+				BA27C5E122FC5A08005FDAB7 /* TransferFundsTests.swift */,
+			);
+			path = TranferFunds;
+			sourceTree = "<group>";
+		};
+		BAFA596322FD7487002AACE3 /* TransferFunds */ = {
+			isa = PBXGroup;
+			children = (
+				BAFA596422FD74C6002AACE3 /* TransferFunds.swift */,
+			);
+			path = TransferFunds;
+			sourceTree = "<group>";
+		};
 		C358A9A12272644000E5AE47 /* TransferMethod */ = {
 			isa = PBXGroup;
 			children = (
@@ -1449,6 +1468,7 @@
 		DB2587FC2261BFF100E6236B /* UITests */ = {
 			isa = PBXGroup;
 			children = (
+				BA27C5E022FC59B1005FDAB7 /* TranferFunds */,
 				641324DF229575CE00512816 /* BaseTests */,
 				DBB2B6F52261C13F006C48D3 /* Helper */,
 				DBB2B6F92261C140006C48D3 /* Extensions */,
@@ -1720,6 +1740,7 @@
 		DBB2B6F52261C13F006C48D3 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				BAFA596322FD7487002AACE3 /* TransferFunds */,
 				09E7164E22A697A400FA9B96 /* Receipts */,
 				C358A9A12272644000E5AE47 /* TransferMethod */,
 				DBB2B6FA2261C140006C48D3 /* HyperwalletMockWebServer.swift */,
@@ -3040,6 +3061,7 @@
 				98F63E6F2284AD9B0090101D /* AddTransferMethodPayPalAccountTests.swift in Sources */,
 				641EBE92228EE35A00D718F4 /* AddTransferMethodBankAccountBusinessTests.swift in Sources */,
 				C358A9A62272644000E5AE47 /* ListTransferMethods.swift in Sources */,
+				BA27C5E222FC5A08005FDAB7 /* TransferFundsTests.swift in Sources */,
 				C358A9A52272644000E5AE47 /* AddTransferMethod.swift in Sources */,
 				4157136422C56B53005D6DB1 /* PrepaidCardListReceiptTests.swift in Sources */,
 				DBB2B7152261C142006C48D3 /* SelectTransferMethodTypeTests.swift in Sources */,
@@ -3055,6 +3077,7 @@
 				09E7165622A6983400FA9B96 /* ListReceiptTests.swift in Sources */,
 				09E7165022A697C400FA9B96 /* ReceiptsList.swift in Sources */,
 				DBB2B7272261C142006C48D3 /* AddTransferMethodBankAccountIndividualTests.swift in Sources */,
+				BAFA596522FD74C6002AACE3 /* TransferFunds.swift in Sources */,
 				C358A9A72272644000E5AE47 /* SelectTransferMethodType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
