@@ -1,6 +1,6 @@
 import XCTest
 
-class TransferFunds {
+class UiSelectDestination {
    let defaultTimeout = 5.0
 
     var app: XCUIApplication
