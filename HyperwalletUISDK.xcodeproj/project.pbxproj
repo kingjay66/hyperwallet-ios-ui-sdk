@@ -135,6 +135,16 @@
 		9807B76D226442C60028A280 /* UnexpectedErrorResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61492261E84C00C4A8AA /* UnexpectedErrorResponse.json */; };
 		98220B8C2265793700055E18 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 98220B8B2265793700055E18 /* README.md */; };
 		98541F152273D72C007D4238 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 98541F142273D72C007D4238 /* CHANGELOG.md */; };
+		986B5075230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 986B5073230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld */; };
+		986B507A230DFB5B00BE6A53 /* FPTITracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5079230DFB5B00BE6A53 /* FPTITracker.swift */; };
+		986B507C230DFCDF00BE6A53 /* TrackerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */; };
+		986B507E230E09B500BE6A53 /* FPTIEventsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */; };
+		986B5080230E0A2100BE6A53 /* InMemoryFTPICacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */; };
+		986B5082230E0B0E00BE6A53 /* EventsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5081230E0B0E00BE6A53 /* EventsResponse.swift */; };
+		986B5084230E0BDE00BE6A53 /* FPTIEventCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */; };
+		986B5086230E0CE900BE6A53 /* SerializationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5085230E0CE900BE6A53 /* SerializationUtils.swift */; };
+		986B5088230F087A00BE6A53 /* FPTITagConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5087230F087A00BE6A53 /* FPTITagConstants.swift */; };
+		986B508A230F37EB00BE6A53 /* FPTITagsPayloadGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5089230F37EA00BE6A53 /* FPTITagsPayloadGenerator.swift */; };
 		98F3D754230C5BE400A8195F /* TransferFundsConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */; };
 		98F3D755230C5BEC00A8195F /* TransferFundsSelectDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */; };
 		98F3D756230C5BFC00A8195F /* TransferUserFundsConfirmationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */; };
@@ -762,6 +772,16 @@
 		98220B8B2265793700055E18 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9826056722822E8A000CCA2D /* UIToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIToolbar.swift; sourceTree = "<group>"; };
 		98541F142273D72C007D4238 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
+		986B5074230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HyperwalletUISDK.xcdatamodel; sourceTree = "<group>"; };
+		986B5079230DFB5B00BE6A53 /* FPTITracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTITracker.swift; sourceTree = "<group>"; };
+		986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerOptions.swift; sourceTree = "<group>"; };
+		986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTIEventsCache.swift; sourceTree = "<group>"; };
+		986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFTPICacheController.swift; sourceTree = "<group>"; };
+		986B5081230E0B0E00BE6A53 /* EventsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsResponse.swift; sourceTree = "<group>"; };
+		986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTIEventCacheController.swift; sourceTree = "<group>"; };
+		986B5085230E0CE900BE6A53 /* SerializationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializationUtils.swift; sourceTree = "<group>"; };
+		986B5087230F087A00BE6A53 /* FPTITagConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTITagConstants.swift; sourceTree = "<group>"; };
+		986B5089230F37EA00BE6A53 /* FPTITagsPayloadGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTITagsPayloadGenerator.swift; sourceTree = "<group>"; };
 		988547C92294B829007B312C /* ListReceiptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptController.swift; sourceTree = "<group>"; };
 		988547CB2294B879007B312C /* ListReceiptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptPresenter.swift; sourceTree = "<group>"; };
 		988547CF22970FA1007B312C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -1503,6 +1523,23 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		986B5078230DF9D700BE6A53 /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				986B5073230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld */,
+				986B5079230DFB5B00BE6A53 /* FPTITracker.swift */,
+				986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */,
+				986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */,
+				986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */,
+				986B5081230E0B0E00BE6A53 /* EventsResponse.swift */,
+				986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */,
+				986B5085230E0CE900BE6A53 /* SerializationUtils.swift */,
+				986B5087230F087A00BE6A53 /* FPTITagConstants.swift */,
+				986B5089230F37EA00BE6A53 /* FPTITagsPayloadGenerator.swift */,
+			);
+			path = Insights;
+			sourceTree = "<group>";
+		};
 		A65312D022FC044300A83D30 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1667,6 +1704,7 @@
 		DB551F4A22E1316400DD65C2 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				986B5078230DF9D700BE6A53 /* Insights */,
 				DBCA382E225E8BA900CD4137 /* Extensions */,
 				DBCA383F225E8BAA00CD4137 /* Generics */,
 				DBCA3843225E8BAA00CD4137 /* Helper */,
@@ -3259,20 +3297,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBC199FB22E29CF0004447DD /* ErrorView.swift in Sources */,
+				986B507A230DFB5B00BE6A53 /* FPTITracker.swift in Sources */,
 				DBC199F922E29CE4004447DD /* ProcessingView.swift in Sources */,
 				DBC199FA22E29CE4004447DD /* HyperwalletUI.swift in Sources */,
 				DBC199F422E29CD7004447DD /* HyperwalletIcon.swift in Sources */,
 				DBC199F522E29CD7004447DD /* HyperwalletIconContent.swift in Sources */,
+				986B508A230F37EB00BE6A53 /* FPTITagsPayloadGenerator.swift in Sources */,
 				DBC199F622E29CD7004447DD /* HyperwalletUtilViews.swift in Sources */,
+				986B5075230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld in Sources */,
 				DBC199F722E29CD7004447DD /* Theme.swift in Sources */,
+				986B507C230DFCDF00BE6A53 /* TrackerOptions.swift in Sources */,
 				DBC199F822E29CD7004447DD /* ThemeManager.swift in Sources */,
+				986B5088230F087A00BE6A53 /* FPTITagConstants.swift in Sources */,
 				DBC199DE22E29CD0004447DD /* Array.swift in Sources */,
+				986B507E230E09B500BE6A53 /* FPTIEventsCache.swift in Sources */,
 				DBC199DF22E29CD0004447DD /* Date.swift in Sources */,
 				DBC199E022E29CD0004447DD /* HyperwalletCountry.swift in Sources */,
+				986B5084230E0BDE00BE6A53 /* FPTIEventCacheController.swift in Sources */,
 				DBC199E122E29CD0004447DD /* HyperwalletCurrency.swift in Sources */,
 				A65312CE22FC037800A83D30 /* InitializationDataField.swift in Sources */,
 				A65312CF22FC037800A83D30 /* HyperwalletFlowDelegate.swift in Sources */,
 				DBC199E222E29CD0004447DD /* HyperwalletFee.swift in Sources */,
+				986B5080230E0A2100BE6A53 /* InMemoryFTPICacheController.swift in Sources */,
 				4AC7808822EB360B00AB73FD /* PasteOnlyTextField.swift in Sources */,
 				DBC199E322E29CD0004447DD /* HyperwalletTransferMethod.swift in Sources */,
 				4A5C576522E73F3400F3359B /* UISearchBar.swift in Sources */,
@@ -3282,6 +3328,7 @@
 				DBC199E722E29CD0004447DD /* String.swift in Sources */,
 				DBC199E822E29CD0004447DD /* UIAlertAction.swift in Sources */,
 				DBC199E922E29CD0004447DD /* UIBarButtonItem.swift in Sources */,
+				986B5086230E0CE900BE6A53 /* SerializationUtils.swift in Sources */,
 				A65312CD22FC037800A83D30 /* HyperwalletCoordinator.swift in Sources */,
 				DBC199EA22E29CD0004447DD /* UIColor.swift in Sources */,
 				DBC199EB22E29CD0004447DD /* UIFont.swift in Sources */,
@@ -3291,6 +3338,7 @@
 				DBC199EF22E29CD0004447DD /* UIView.swift in Sources */,
 				DBC199F022E29CD0004447DD /* UIViewController.swift in Sources */,
 				DBC199F122E29CD0004447DD /* GenericCell.swift in Sources */,
+				986B5082230E0B0E00BE6A53 /* EventsResponse.swift in Sources */,
 				DBC199F222E29CD0004447DD /* GenericController.swift in Sources */,
 				DBC199F322E29CD0004447DD /* HyperwalletBundle.swift in Sources */,
 			);
@@ -4311,7 +4359,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				PREPAID_CARD_TOKEN = "trm-token";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4340,7 +4388,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				PREPAID_CARD_TOKEN = "trm-token";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4786,7 +4834,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				PREPAID_CARD_TOKEN = "trm-token";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk.Demo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hyperwallet.ui.sdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5491,6 +5539,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		986B5073230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				986B5074230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodel */,
+			);
+			currentVersion = 986B5074230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodel */;
+			path = HyperwalletUISDK.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DBCA37EC225E892400CD4137 /* Project object */;
 }

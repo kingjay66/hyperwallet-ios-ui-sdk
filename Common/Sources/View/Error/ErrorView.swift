@@ -54,6 +54,11 @@ public final class ErrorView {
     ///
     /// - Parameter handler: to handle business error
     public func businessError(_ handler: ((UIAlertAction) -> Void)? = nil) {
+        var eventParams = [String: Any]()
+        eventParams["errorCode"] = error.getHttpCode()
+        eventParams["error"] = error.errorDescription
+//        eventParams["stackTrace"] = Thread.callStackSymbols
+        FPTITracker.shared.trackEvent("Error", with: eventParams)
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "error".localized(),
                                        message: error.getHyperwalletErrors()?.errorList?
