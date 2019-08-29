@@ -32,4 +32,4 @@ before_install:
   - Carthage update --platform iOS  --cache-builds
   - gem install fastlane --no-document
 script:
-  - fastlane scan --scheme "$IOS_UI_TESTS_SCHEME" --device "$ios_device"
+  - fastlane scan --scheme "$scheme" --device "$ios_device"
