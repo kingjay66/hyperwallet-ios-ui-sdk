@@ -28,6 +28,6 @@ before_install:
   # Update the brew and build dependencies tools
   # - brew outdated carthage || brew upgrade carthage
   - Carthage update --platform iOS  --cache-builds
-  - gem install fastlane --no-ri --no-rdoc --no-document
+  - gem install fastlane --no-document
 script:
   - fastlane scan --scheme "$IOS_UI_TESTS_SCHEME" --device "$ios_device"
