@@ -15,6 +15,7 @@ class AddTransferMethodPayPalAccountTests: BaseTests {
             "ACCOUNT_TYPE": "PAYPAL_ACCOUNT",
             "PROFILE_TYPE": "INDIVIDUAL"
         ]
+        app.launchArguments = ["UITests"]
         app.launch()
 
         mockServer.setupStub(url: "/graphql",

@@ -16,6 +16,7 @@ class AddTransferMethodBankAccountIndividualTests: BaseTests {
             "ACCOUNT_TYPE": "BANK_ACCOUNT",
             "PROFILE_TYPE": "INDIVIDUAL"
         ]
+        app.launchArguments = ["UITests"]
         app.launch()
 
         mockServer.setupStub(url: "/graphql",

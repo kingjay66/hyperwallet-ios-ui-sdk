@@ -9,6 +9,7 @@ class ListReceiptTests: BaseTests {
         super.setUp()
 
         app = XCUIApplication()
+        app.launchArguments = ["UITests"]
         app.launch()
 
         receiptsList = ReceiptsList(app: app)

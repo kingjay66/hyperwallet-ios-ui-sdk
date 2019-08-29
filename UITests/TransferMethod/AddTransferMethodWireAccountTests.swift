@@ -16,6 +16,7 @@ class AddTransferMethodWireAccountIndividualTests: BaseTests {
             "ACCOUNT_TYPE": "WIRE_ACCOUNT",
             "PROFILE_TYPE": "INDIVIDUAL"
         ]
+        app.launchArguments = ["UITests"]
         app.launch()
 
         mockServer.setupStub(url: "/graphql",

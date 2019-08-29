@@ -7,6 +7,7 @@ class TransferUserFundsTest: BaseTests {
     override func setUp() {
         super.setUp()
         app = XCUIApplication()
+        app.launchArguments = ["UITests"]
         app.launch()
         spinner = app.activityIndicators["activityIndicator"]
         transferFundMenu = app.tables.cells
