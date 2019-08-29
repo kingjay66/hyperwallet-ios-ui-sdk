@@ -19,12 +19,34 @@
 import CoreData
 import Foundation
 
-class FPTIEventCacheController: FPTIEventsCache {
-    public static var shared: FPTIEventsCache = FPTIEventCacheController() as FPTIEventsCache
-    private lazy var util = SerializationUtils()
+protocol FPTIEventsCache: class {
+    /// This method gets events saved in our FPTI local database and returns the payload for all
+    /// these events to the calling method.
+    ///
+    /// - Returns: [[String: Any]]
+    func getAllEvents(before currentTime: Int64) -> [[String: Any]]
 
-    let model = "HyperwalletUISDK"
-    lazy var persistentContainer: NSPersistentContainer = {
+    /// This method returns number of events in the local database
+    ///
+    /// - Returns: Count of events in local database
+    func getEventCount() -> Int
+
+    /// Saves an FPTI Event Params within the Database. This saves the data in the Events table with a
+    /// unique event id.
+    func saveEvent(eventParams: [String: Any])
+
+    /// Deletes sent events from local database
+    func deleteFlushedEvents(before currentTime: Int64)
+
+    /// Update retry column for events that were not flushed successfully
+    func updateRetryForFailedFlushEvents(before currentTime: Int64)
+}
+
+class FPTIEventCacheController: FPTIEventsCache {
+    private static var instance: FPTIEventsCache?
+    private lazy var util = SerializationUtils()
+    private let model = "HyperwalletUISDK"
+    private lazy var persistentContainer: NSPersistentContainer = {
         let hyperwalletBundle = HyperwalletBundle.bundle
         let modelURL = hyperwalletBundle.url(forResource: self.model, withExtension: "momd")!
         let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL)
@@ -36,82 +58,106 @@ class FPTIEventCacheController: FPTIEventsCache {
         }
         return container
     }()
-    func getAllEvents() throws -> EventsResponse? {
+
+    /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
+    static var shared: FPTIEventsCache {
+        if instance == nil {
+            instance = FPTIEventCacheController()
+        }
+        return instance!
+    }
+
+    private init() {
+    }
+
+    func getAllEvents(before currentTime: Int64) -> [[String: Any]] {
         var eventParamsArray: [[String: Any]] = []
-        var documentIdKeys: Set<String> = []
         let context = persistentContainer.viewContext
 
-        let fetchRequest = NSFetchRequest<Events>(entityName: "Events")
+        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest() //NSFetchRequest<Events>(entityName: "Events")
+        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime)
+        fetchRequest.predicate = predicate
 
         do {
             let events = try context.fetch(fetchRequest)
 
             for (index, event) in events.enumerated() {
-                documentIdKeys.insert(event.eventId!)
                 eventParamsArray.append(util.convertToDictionary(text: event.eventPayload!)!)
-                print("Event \(index): \(event.eventId ?? "N/A") \(event.eventTimestamp ?? Date()) \(event.eventPayload ?? "N/A")")
+                print("Event \(index): \(event.eventTimestamp ) \(event.eventPayload ?? "N/A")")
             }
-        } catch let fetchErr {
-            print("❌ Failed to fetch meme:", fetchErr)
-            throw fetchErr
+        } catch {
+            print("❌ Failed to fetch events", error.localizedDescription)
         }
-        return EventsResponse(eventParams: eventParamsArray, eventKeys: documentIdKeys)
+        return eventParamsArray
     }
 
     func getEventCount() -> Int {
         let context = persistentContainer.viewContext
 
-        let fetchRequest = NSFetchRequest<Events>(entityName: "Events")
+        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest()
 
         do {
             let eventCount = try context.count(for: fetchRequest)
             return eventCount
-        } catch let fetchErr {
-            print("❌ Failed to fetch meme:", fetchErr)
+        } catch {
+            print("❌ Failed to fetch meme:", error.localizedDescription)
         }
         return 0
     }
 
-    func saveEvent(eventParams: [String: Any], forSession: String) {
+    func saveEvent(eventParams: [String: Any]) {
         let context = persistentContainer.viewContext
-        let event = NSEntityDescription.insertNewObject(forEntityName: "Events", into: context) as? Events
+
+        let event = Events(context: context) //NSEntityDescription.insertNewObject(forEntityName: "Events", into: context) as? Events
         let payloadString = util.convertToString(dict: eventParams)
-        if let event = event {
-            event.eventId = UUID().uuidString as String
+//        if let event = event {
             event.eventPayload = payloadString
-            event.eventTimestamp = Date()
-            event.eventSession = forSession
-            event.dispatchStatus = 0
+            event.eventTimestamp = Date().toMillis()
             do {
-                try event.validateForInsert()
                 try context.save()
                 print("✅ Event saved successfully")
             } catch {
                 print("❌ Failed to save Event: \(error.localizedDescription)")
             }
-        }
+//        }
     }
 
-    func updateStatusOfSentEvents() {
+    func deleteFlushedEvents(before currentTime: Int64) {
         let context = persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<Events>(entityName: "Events")
-        // Add Predicate
-        let predicate = NSPredicate(format: "dispatchStatus IN %@", "o")
-        fetchRequest.predicate = predicate
-    }
-
-    func deleteSentEvents(eventKeys: Set<String>) {
-        let context = persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Events")
-        let predicate = NSPredicate(format: "eventId IN %@", eventKeys)
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Events.fetchRequest()
+        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime as CVarArg)
         fetchRequest.predicate = predicate
         let deleteRequest = NSBatchDeleteRequest( fetchRequest: fetchRequest)
         do {
-            print("eventKeys to be deleted: \(eventKeys)")
+            print("eventKeys to be before time \(currentTime)")
             try context.execute(deleteRequest)
-            print("✅ Event deleted successfully")
+            print("✅ Event deleted successfully before time \(currentTime)")
         } catch {
             print("❌ Failed to delete Event: \(error.localizedDescription)")
+        }
+    }
+
+    func updateRetryForFailedFlushEvents(before currentTime: Int64) {
+        let context = persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest()
+        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime as CVarArg)
+//        let predicate = NSPredicate(format: "retry = %@", 1)
+        fetchRequest.predicate = predicate
+        do {
+            print("eventKeys to be updated before time \(currentTime)")
+
+            let events = try context.fetch(fetchRequest)
+            for event in events {
+                do {
+                    try context.save()
+                } catch {
+                    print("Failed to update retry event")
+                }
+            }
+
+            print("✅ Event updated successfully before time \(currentTime)")
+        } catch {
+            print("❌ Failed to update Event: \(error.localizedDescription)")
         }
     }
 }

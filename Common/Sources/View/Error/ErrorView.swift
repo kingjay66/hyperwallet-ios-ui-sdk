@@ -55,10 +55,18 @@ public final class ErrorView {
     /// - Parameter handler: to handle business error
     public func businessError(_ handler: ((UIAlertAction) -> Void)? = nil) {
         var eventParams = [String: Any]()
-        eventParams["errorCode"] = error.getHttpCode()
-        eventParams["error"] = error.errorDescription
-//        eventParams["stackTrace"] = Thread.callStackSymbols
-        FPTITracker.shared.trackEvent("Error", with: eventParams)
+        if let hyperwalletErrors = error.getHyperwalletErrors()?.errorList {
+            for hyperwalletError in hyperwalletErrors {
+                eventParams[FPTITag.errorCode] = hyperwalletError.code
+                eventParams[FPTITag.errorFieldName] = hyperwalletError.fieldName
+                eventParams[FPTITag.errorMessage] = hyperwalletError.message
+                eventParams[FPTITag.errorType] = FPTITagValue.errorTypeApi
+                eventParams[FPTITag.errorDescription] = Thread.callStackSymbols
+            }
+        }
+
+        FPTITracker.shared.trackError(eventParams)
+
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "error".localized(),
                                        message: error.getHyperwalletErrors()?.errorList?
@@ -76,6 +84,13 @@ public final class ErrorView {
     }
 
     private func connectionError(_ handler: @escaping (UIAlertAction) -> Void) {
+        var eventParams = [String: Any]()
+        eventParams[FPTITag.errorCode] = FPTITagValue.errorCodeConnection
+        eventParams[FPTITag.errorType] = FPTITagValue.errorTypeConnection
+        eventParams[FPTITag.errorMessage] = error.errorDescription
+        eventParams[FPTITag.errorDescription] = Thread.callStackSymbols
+        let fptiTrack: FPTITrack = FPTITracker.shared
+        fptiTrack.trackError(eventParams)
         HyperwalletUtilViews.showAlertWithRetry(viewController,
                                                 title: "network_connection_error_title".localized(),
                                                 message: "network_connection_error_message".localized(),

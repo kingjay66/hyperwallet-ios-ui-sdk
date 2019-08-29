@@ -18,30 +18,53 @@
 
 import Foundation
 
-public protocol Tracking {
-    func trackEvent(_ event: String, with params: [String: Any])
+/// Standard tracking protocol that our default FPTI tracking implements.
+public protocol FPTITrack {
+    /// Track an FPTI Event of type `cl`.
+    ///
+    /// - Parameter params: Additional parameters to add to the event
+    func trackClick(_ params: [String: Any])
+
+    /// Track an FPTI Event of type `er`.
+    ///
+    /// - Parameter params: Additional parameters to add to the event
+    func trackError(_ params: [String: Any])
+
+    /// Track an FPTI Event of type `im`.
+    ///
+    /// - Parameter params: Additional parameters to add to the event
+    func trackImpression(_ params: [String: Any])
+
+    /// Flushes any saved events in the local database to the server.
+    func flushData()
 }
 
-public class FPTITracker: NSObject, Tracking {
-    private static var instance: Tracking?
+/// Represents an FPTI Tracker that is capable of tracking events sent to
+/// This Tracker uses the FPTI Batch Tracking API to send data to the server.
+/// To enable batching and ensuring persistance, we use a caching layer that keeps the cached data
+/// on disk. This will be evicted as soon as the batch size reaches or the timer expires.
+/// @note : FPTI (First Party Tracking Infrastructure)
+public class FPTITracker: NSObject, FPTITrack {
+    private static var instance: FPTITrack?
 
-    /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
-    public static var shared: Tracking {
+    /// Returns the previously initialized instance of the FPTITracker
+    public static var shared: FPTITrack {
         if instance == nil {
             instance = FPTITracker()
         }
         return instance!
     }
     private var timerForFPTI: DispatchSourceTimer?
-    private let sessionId = UUID().uuidString
+    private var sessionId: String
     /// Tracker Options defining some key parameters for tracker to operate.
-    var options = TrackerOptions()
+    private var options = TrackerOptions()
     /// Dispatch Queue to send all tracker Events.
-    let eventDispatchQueue: DispatchQueue
+    private let eventDispatchQueue: DispatchQueue
 
     /// Get a shared reference to the Local Disk Cache. Internally, this is using
     /// Core Data to cache the events
-    var cacheController: FPTIEventsCache
+    private var cacheController: FPTIEventsCache
+    private lazy var flushInProgress = false
 
     /// Initializer for FPTI Tracker. Typically within an application, you want to have only one
     /// instance of the tracker. Upon initialization, this will also keep a check on existing events
@@ -49,82 +72,93 @@ public class FPTITracker: NSObject, Tracking {
     override private init() {
         eventDispatchQueue = DispatchQueue(label: "com.hyperwallet.fpti", qos: .background)
         options = TrackerOptions()
-        self.cacheController = FPTIEventCacheController.shared
+        cacheController = FPTIEventCacheController.shared
+        sessionId = UUID().uuidString
         super.init()
     }
 
-    public func trackEvent(_ event: String, with params: [String: Any]) {
+    public func trackClick(_ params: [String: Any]) {
+        trackEvent(FPTITagValue.click, with: params)
+    }
+
+    public func trackError(_ params: [String: Any]) {
+        trackEvent(FPTITagValue.error, with: params)
+    }
+
+    public func trackImpression(_ params: [String: Any]) {
+        trackEvent(FPTITagValue.impression, with: params)
+    }
+
+    private func trackEvent(_ eventType: String, with params: [String: Any]) {
         let eventParams = enrichLocalUserEvent(eventParams: params)
         eventDispatchQueue.async {
-            self.cacheController.saveEvent(eventParams: eventParams,
-                                           forSession: (eventParams[FPTITag.sessionId] as? String)!)
-            self.flushIfQueueFull()
+            self.cacheController.saveEvent(eventParams: eventParams)
+            self.flushIfReachedMaxBatchSize()
             self.startFlushTimer()
+        }
+    }
+
+    /// Flushes any saved events in the database to the server.
+    public func flushData() {
+        // If our application is already trying to flush events, we just quit the flush operation
+        // and check on it later.
+        guard !flushInProgress else {
+            print("Flush is already in progress.")
+            return
+        }
+        flushInProgress = true
+        // Get all events in the database and make a batch network call.
+        // Queue operations to get all sessions first and send those sessions once we have them
+        eventDispatchQueue.async {
+            let success = true
+            let currentTime = Date().toMillis()!
+            print("Fetching events from local cache before time \(currentTime). ")
+            let events = self.cacheController.getAllEvents(before: currentTime)
+            if events.isNotEmpty {
+                print("Flushing events from local cache before time \(currentTime). ")
+                // TODO make an api call to flush events to lighthouse
+                // TODO in success of API call set timer to nil and purge sent events
+                if success {
+                    self.cacheController.deleteFlushedEvents(before: currentTime)
+                    self.flushInProgress = false
+                    self.timerForFPTI = nil
+                    print("Flush Completed for events saved before \(currentTime)")
+                }
+            }
         }
     }
 
     private func enrichLocalUserEvent(eventParams: [String: Any]) -> [String: Any] {
         var eventParamsMutable: [String: Any] = eventParams
         eventParamsMutable[FPTITag.sessionId] = sessionId
-        let fptiAutoGeneratedPayload = FPTITagsPayloadGenerator()
-        let autoGeneratedParams = fptiAutoGeneratedPayload.buildEvent()
+        let autoGeneratedParams = FPTITagsPayloadGenerator.shared.eventParamsDictionary
         autoGeneratedParams.forEach { paramKey, paramValue in
             eventParamsMutable[paramKey] = paramValue
         }
         return eventParamsMutable
     }
 
-    /**
-     Starts a Tracker Timer for Firing events at regular events.
-     If this is the first time a timer is initialized , then create a new timer event.
-     Or work with the timer
-     */
+    /// Starts a Tracker Timer for Firing events at regular events.
+    /// If this is the first time a timer is initialized , then create a new timer event.
+    /// Or work with the timer
     private func startFlushTimer() {
         // Initialize a timer
         initTimerWithTimeInterval(timeInterval: options.autoFlushTimerInterval)
     }
 
-    private func flushIfQueueFull() {
+    private func flushIfReachedMaxBatchSize() {
         /// Once the event is saved in the database, do check if we have reached the max number of
         /// events that can be handled by the batch. try sending it over the network if that number
         /// has reached the @MAX_BATCH_SIZE
         if cacheController.getEventCount() >= options.maxBatchSize {
-            print("Maximum batch size reached. Flusing data now. ")
-            /// Send the event to FPIT with a completion handler after flushing Data.
+            print("Maximum batch size reached. Flushing data now. ")
             flushData()
-        }
-    }
-
-    /** Flushes any saved events in the database to the server. This method also batches events while
-     sending events over the network and doesn't send everything at once to avoid any huge payloads.
-
-     Although the large events paylaod scenario is very less probable with our auto flush modes and
-     batch event count monitoring, this takes care of everything independently.
-     */
-    @objc
-    func flushData() {
-        // Get all events in the database and make a batch network call.
-        // Queue operations to get all sessions first and send those sessions once we have them
-        DispatchQueue.global(qos: .background).async {
-            print("Flushing Data from local cache. ")
-            do {
-                let events = try self.cacheController.getAllEvents()
-                //TODO make an api call to flush events to lighthouse
-                // TODO in success of API call set timer to nil and purge sent events
-                if let eventKeys = events?.eventKeys {
-                    self.cacheController.deleteSentEvents(eventKeys: eventKeys)
-                }
-                self.timerForFPTI = nil
-                print("Flush Complete")
-            } catch {
-                print("Error fetching events")
-            }
         }
     }
 
     /// Initializes the timer associateSed with the FPTI Tracker. This timer will fire events to the
     /// Batch API at regular time intervals and send any data it has to the server.
-    @objc private func initTimerWithTimeInterval(timeInterval: TimeInterval) {
+    private func initTimerWithTimeInterval(timeInterval: TimeInterval) {
         timerForFPTI = DispatchSource.makeTimerSource(queue: eventDispatchQueue)
         guard let timerToFire = timerForFPTI else {
             return

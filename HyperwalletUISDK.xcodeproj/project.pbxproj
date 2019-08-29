@@ -138,9 +138,6 @@
 		986B5075230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 986B5073230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld */; };
 		986B507A230DFB5B00BE6A53 /* FPTITracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5079230DFB5B00BE6A53 /* FPTITracker.swift */; };
 		986B507C230DFCDF00BE6A53 /* TrackerOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */; };
-		986B507E230E09B500BE6A53 /* FPTIEventsCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */; };
-		986B5080230E0A2100BE6A53 /* InMemoryFTPICacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */; };
-		986B5082230E0B0E00BE6A53 /* EventsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5081230E0B0E00BE6A53 /* EventsResponse.swift */; };
 		986B5084230E0BDE00BE6A53 /* FPTIEventCacheController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */; };
 		986B5086230E0CE900BE6A53 /* SerializationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5085230E0CE900BE6A53 /* SerializationUtils.swift */; };
 		986B5088230F087A00BE6A53 /* FPTITagConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 986B5087230F087A00BE6A53 /* FPTITagConstants.swift */; };
@@ -775,9 +772,6 @@
 		986B5074230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HyperwalletUISDK.xcdatamodel; sourceTree = "<group>"; };
 		986B5079230DFB5B00BE6A53 /* FPTITracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTITracker.swift; sourceTree = "<group>"; };
 		986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerOptions.swift; sourceTree = "<group>"; };
-		986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTIEventsCache.swift; sourceTree = "<group>"; };
-		986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryFTPICacheController.swift; sourceTree = "<group>"; };
-		986B5081230E0B0E00BE6A53 /* EventsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsResponse.swift; sourceTree = "<group>"; };
 		986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTIEventCacheController.swift; sourceTree = "<group>"; };
 		986B5085230E0CE900BE6A53 /* SerializationUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializationUtils.swift; sourceTree = "<group>"; };
 		986B5087230F087A00BE6A53 /* FPTITagConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPTITagConstants.swift; sourceTree = "<group>"; };
@@ -1529,9 +1523,6 @@
 				986B5073230DF29B00BE6A53 /* HyperwalletUISDK.xcdatamodeld */,
 				986B5079230DFB5B00BE6A53 /* FPTITracker.swift */,
 				986B507B230DFCDF00BE6A53 /* TrackerOptions.swift */,
-				986B507D230E09B500BE6A53 /* FPTIEventsCache.swift */,
-				986B507F230E0A2100BE6A53 /* InMemoryFTPICacheController.swift */,
-				986B5081230E0B0E00BE6A53 /* EventsResponse.swift */,
 				986B5083230E0BDE00BE6A53 /* FPTIEventCacheController.swift */,
 				986B5085230E0CE900BE6A53 /* SerializationUtils.swift */,
 				986B5087230F087A00BE6A53 /* FPTITagConstants.swift */,
@@ -3310,7 +3301,6 @@
 				DBC199F822E29CD7004447DD /* ThemeManager.swift in Sources */,
 				986B5088230F087A00BE6A53 /* FPTITagConstants.swift in Sources */,
 				DBC199DE22E29CD0004447DD /* Array.swift in Sources */,
-				986B507E230E09B500BE6A53 /* FPTIEventsCache.swift in Sources */,
 				DBC199DF22E29CD0004447DD /* Date.swift in Sources */,
 				DBC199E022E29CD0004447DD /* HyperwalletCountry.swift in Sources */,
 				986B5084230E0BDE00BE6A53 /* FPTIEventCacheController.swift in Sources */,
@@ -3318,7 +3308,6 @@
 				A65312CE22FC037800A83D30 /* InitializationDataField.swift in Sources */,
 				A65312CF22FC037800A83D30 /* HyperwalletFlowDelegate.swift in Sources */,
 				DBC199E222E29CD0004447DD /* HyperwalletFee.swift in Sources */,
-				986B5080230E0A2100BE6A53 /* InMemoryFTPICacheController.swift in Sources */,
 				4AC7808822EB360B00AB73FD /* PasteOnlyTextField.swift in Sources */,
 				DBC199E322E29CD0004447DD /* HyperwalletTransferMethod.swift in Sources */,
 				4A5C576522E73F3400F3359B /* UISearchBar.swift in Sources */,
@@ -3338,7 +3327,6 @@
 				DBC199EF22E29CD0004447DD /* UIView.swift in Sources */,
 				DBC199F022E29CD0004447DD /* UIViewController.swift in Sources */,
 				DBC199F122E29CD0004447DD /* GenericCell.swift in Sources */,
-				986B5082230E0B0E00BE6A53 /* EventsResponse.swift in Sources */,
 				DBC199F222E29CD0004447DD /* GenericController.swift in Sources */,
 				DBC199F322E29CD0004447DD /* HyperwalletBundle.swift in Sources */,
 			);
@@ -4346,7 +4334,7 @@
 				BASE_URL = "http://localhost:8080";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 86FDS64Z83;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -4375,7 +4363,7 @@
 				BASE_URL = "http://localhost:8080";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 86FDS64Z83;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -4724,7 +4712,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "1.0.0-beta03";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -4821,7 +4809,7 @@
 				BASE_URL = "http://localhost:8080";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 86FDS64Z83;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -5182,7 +5170,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "1.0.0-beta03";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -5247,7 +5235,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = "1.0.0-beta03";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

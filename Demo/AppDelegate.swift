@@ -18,6 +18,9 @@
 
 #if !COCOAPODS
 import Common
+import Receipt
+import Transfer
+import TransferMethod
 #endif
 import UIKit
 
@@ -29,9 +32,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        //ThemeManager.applyWhiteTheme()
-        ThemeManager.applyTheme()
+        ThemeManager.applyWhiteTheme()
+//        ThemeManager.applyTheme()
         ThemeManager.applyTransferTheme()
+        ThemeManager.applyTransferMethodTheme()
+        ThemeManager.applyReceiptTheme()
 
         // Avoid to display a black area during the view transaction in the UINavigationBar.
         window?.backgroundColor = Theme.ViewController.backgroundColor
@@ -39,5 +44,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.tintColor = Theme.Button.color
 
         return true
+    }
+
+    public func applicationWillTerminate(_ application: UIApplication) {
+        FPTITracker.shared.flushData()
+    }
+
+    public func applicationDidEnterBackground(_ application: UIApplication) {
+        FPTITracker.shared.flushData()
     }
 }

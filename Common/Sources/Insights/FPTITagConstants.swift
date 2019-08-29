@@ -19,15 +19,14 @@
 import Foundation
 
 public struct FPTITag {
+    public static let eventType = "e"
     public static let timestamp = "t"
     public static let pageName = "page"
     public static let pageGroup = "pgrp"
     public static let mobileDeviceModel = "mdvs"
     public static let pageTechnologyFramework = "pgtf"
-    public static let swiftFramework = "swift"
     public static let ipAddress = "ip"
     public static let sessionId = "vid"
-    public static let deviceTimeZone = "g"
     public static let deviceType = "dvis"
     public static let product = "product"
     public static let deviceScreenWidth = "sw"
@@ -35,8 +34,43 @@ public struct FPTITag {
     public static let operatingSystem = "os"
     public static let operatingSystemVersion = "osv"
     public static let sdkVersion = "sdk_version"
+    //TODO language should be added from Accept-Language http header at server side
+    public static let language = "rsta"
+    // Component Hyperwallet
+    public static let component = "comp"
+    //UUID (unique per session)
+    public static let trackingVisitId = "tracking_visit_id"
+    //User Token
+    public static let trackingVisitorId = "tracking_visitor_id"
+
+    // Error Tags
+    public static let errorFieldName = "erfd"
+    public static let errorCode = "error_code"
+    public static let errorMessage = "error_message"
+    public static let errorType = "error_type"
+    public static let errorDescription = "error_description"
+}
+
+public struct FPTITagValue {
+    //Devide Type
     public static let phoneDeviceTypeValue = "Mobile Phone"
     public static let tabletDeviceTypeValue = "Tablet"
     public static let tvDeviceTypeValue = "TV"
     public static let carPlayDeviceTypeValue = "CarPlay"
+    //Error Types
+    public static let errorTypeApi = "API"
+    public static let errorTypeForm = "FORM"
+    public static let errorTypeConnection = "CONNECTION"
+    public static let errorTypeException = "EXCEPTION"
+    public static let errorCodeConnection = "TIMEOUT"
+
+    public static let product = "mobile-ui-sdk"
+    public static let operatingSystem = "iOS"
+    public static let swiftFramework = "swift"
+    public static let hyperwalletComponent = "hyperwallet"
+
+    // Event Type
+    public static let click = "cl"
+    public static let impression = "im"
+    public static let error = "er"
 }
