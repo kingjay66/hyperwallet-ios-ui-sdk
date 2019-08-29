@@ -16,9 +16,7 @@ env:
   - IOS_UI_TESTS_SCHEME="Demo"
 
   matrix:
-    - ios_version='12.1'  ios_device='iPhone XR' scheme="$IOS_FRAMEWORK_SCHEME" platform='iOS Simulator' configuration="Debug" code_coverage="YES" only_active_arch="YES"
     - ios_version='12.1'  ios_device='iPhone XR' scheme="$IOS_UI_TESTS_SCHEME"  platform='iOS Simulator' configuration="XCUITest" code_coverage="NO" only_active_arch="NO"
-    - ios_version='11.1'  ios_device='iPhone 7'  scheme="$IOS_UI_TESTS_SCHEME"  platform='iOS Simulator' configuration="XCUITest" code_coverage="NO" only_active_arch="NO"
 
 before_install:
   # Boot the emulator by ID
@@ -30,32 +28,6 @@ before_install:
   # Update the brew and build dependencies tools
   # - brew outdated carthage || brew upgrade carthage
   - Carthage update --platform iOS  --cache-builds
-  - gem i slather
-  # Install build output formatting tool
-  - gem install xcpretty
-  # Force to update the Swiftlint to the last stable version
-  - brew outdated swiftlint || brew upgrade swiftlint
-  # Print the booted emulator
-  - xcrun simctl list | grep "(Booted)"
-  # Print the swiftlint version
-  - swiftlint version
-script: |
-  set -o pipefail
-  set -e
-
-  # Define the destination emulator
-  destination="platform=$platform,OS=$ios_version,name=$ios_device"
-
-  # Build and test Framework in Debug
-  xcodebuild -enableCodeCoverage "$code_coverage" clean build test -project "$PROJECT" \
-    -scheme "$scheme" \
-    -destination "$destination" \
-    -configuration "$configuration" ONLY_ACTIVE_ARCH="$only_active_arch" ENABLE_TESTABILITY=YES CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO \
-    | xcpretty
-
-  # Lint - Add `--strict` to fail for warning and violation
-  swiftlint lint --quiet --reporter json
-after_success:
- if [ "$code_coverage" == "YES" ]; then
-      slather;
- fi
+  - gem install fastlane --no-ri --no-rdoc --no-document
+script:
+  fastlane scan --scheme "$IOS_UI_TESTS_SCHEME" --device "$ios_device"
