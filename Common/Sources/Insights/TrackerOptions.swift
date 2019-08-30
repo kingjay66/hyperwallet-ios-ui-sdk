@@ -18,19 +18,15 @@
 
 import Foundation
 
-/// Default options for Initiailzing the Tracker.
-protocol TrackerOption {
+/// Default TrackerOptions struct. Used in creating the FPTI Tracker module.
+struct TrackerOptions {
     /// A timer that will flush all the events to FPTI after a specified duration has expired.
     /// @default 10.0
-    var autoFlushTimerInterval: Double { get }
-
+    var autoFlushTimerInterval = 10.0
     /// Maximum Batch size after which we trigger a netowrk flush of events.
     ///@default 10
-    var maxBatchSize: Int { get }
-}
+    var maxBatchSize = 2
 
-/// Default TrackerOptions struct. Used in creating the FPTI Tracker module.
-struct TrackerOptions: TrackerOption {
-    var autoFlushTimerInterval: Double = 10.0
-    var maxBatchSize: Int = 2
+    /// Days after which
+    var cacheThresholdDays = 7
 }

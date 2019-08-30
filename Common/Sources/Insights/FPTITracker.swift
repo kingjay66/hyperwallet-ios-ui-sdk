@@ -70,7 +70,7 @@ public class FPTITracker: NSObject, FPTITrack {
     /// instance of the tracker. Upon initialization, this will also keep a check on existing events
     /// that are pending to be send to the server.
     override private init() {
-        eventDispatchQueue = DispatchQueue(label: "com.hyperwallet.fpti", qos: .background)
+        eventDispatchQueue = DispatchQueue(label: "com.hyperwallet.eventDispatchQueue", qos: .background)
         options = TrackerOptions()
         cacheController = FPTIEventCacheController.shared
         sessionId = UUID().uuidString
@@ -107,6 +107,8 @@ public class FPTITracker: NSObject, FPTITrack {
             return
         }
         flushInProgress = true
+        self.timerForFPTI = nil
+
         // Get all events in the database and make a batch network call.
         // Queue operations to get all sessions first and send those sessions once we have them
         eventDispatchQueue.async {
@@ -120,11 +122,17 @@ public class FPTITracker: NSObject, FPTITrack {
                 // TODO in success of API call set timer to nil and purge sent events
                 if success {
                     self.cacheController.deleteFlushedEvents(before: currentTime)
-                    self.flushInProgress = false
-                    self.timerForFPTI = nil
                     print("Flush Completed for events saved before \(currentTime)")
+                } else {
+                    let cacheThresholdDays = Calendar.current.date(byAdding: .day,
+                                                                   value: self.options.cacheThresholdDays,
+                                                                   to: Date())
+                    if let cacheThresholdDays = cacheThresholdDays?.toMillis() {
+                        self.cacheController.deleteOldEvents(before: cacheThresholdDays)
+                    }
                 }
             }
+            self.flushInProgress = false
         }
     }
 
@@ -156,7 +164,7 @@ public class FPTITracker: NSObject, FPTITrack {
         }
     }
 
-    /// Initializes the timer associateSed with the FPTI Tracker. This timer will fire events to the
+    /// Initializes the timer associated with the FPTI Tracker. This timer will fire events to the
     /// Batch API at regular time intervals and send any data it has to the server.
     private func initTimerWithTimeInterval(timeInterval: TimeInterval) {
         timerForFPTI = DispatchSource.makeTimerSource(queue: eventDispatchQueue)

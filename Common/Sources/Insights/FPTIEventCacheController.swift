@@ -38,8 +38,8 @@ protocol FPTIEventsCache: class {
     /// Deletes sent events from local database
     func deleteFlushedEvents(before currentTime: Int64)
 
-    /// Update retry column for events that were not flushed successfully
-    func updateRetryForFailedFlushEvents(before currentTime: Int64)
+    /// Delete events that were not flushed successfully within cleanup time
+    func deleteOldEvents(before cleanupTime: Int64)
 }
 
 class FPTIEventCacheController: FPTIEventsCache {
@@ -72,11 +72,10 @@ class FPTIEventCacheController: FPTIEventsCache {
 
     func getAllEvents(before currentTime: Int64) -> [[String: Any]] {
         var eventParamsArray: [[String: Any]] = []
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
 
-        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest() //NSFetchRequest<Events>(entityName: "Events")
-        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime)
-        fetchRequest.predicate = predicate
+        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "eventTimestamp <= \(currentTime)")
 
         do {
             let events = try context.fetch(fetchRequest)
@@ -92,7 +91,7 @@ class FPTIEventCacheController: FPTIEventsCache {
     }
 
     func getEventCount() -> Int {
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
 
         let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest()
 
@@ -100,15 +99,15 @@ class FPTIEventCacheController: FPTIEventsCache {
             let eventCount = try context.count(for: fetchRequest)
             return eventCount
         } catch {
-            print("❌ Failed to fetch meme:", error.localizedDescription)
+            print("❌ Failed to fetch event count:", error.localizedDescription)
         }
         return 0
     }
 
     func saveEvent(eventParams: [String: Any]) {
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
 
-        let event = Events(context: context) //NSEntityDescription.insertNewObject(forEntityName: "Events", into: context) as? Events
+        let event = Events(context: context)
         let payloadString = util.convertToString(dict: eventParams)
 //        if let event = event {
             event.eventPayload = payloadString
@@ -123,9 +122,9 @@ class FPTIEventCacheController: FPTIEventsCache {
     }
 
     func deleteFlushedEvents(before currentTime: Int64) {
-        let context = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Events.fetchRequest()
-        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime as CVarArg)
+        let predicate = NSPredicate(format: "eventTimestamp <= \(currentTime)")
         fetchRequest.predicate = predicate
         let deleteRequest = NSBatchDeleteRequest( fetchRequest: fetchRequest)
         do {
@@ -137,27 +136,18 @@ class FPTIEventCacheController: FPTIEventsCache {
         }
     }
 
-    func updateRetryForFailedFlushEvents(before currentTime: Int64) {
-        let context = persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<Events> = Events.fetchRequest()
-        let predicate = NSPredicate(format: "eventTimestamp < %@", currentTime as CVarArg)
-//        let predicate = NSPredicate(format: "retry = %@", 1)
+    func deleteOldEvents(before cleanupTime: Int64) {
+        let context = persistentContainer.newBackgroundContext()
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Events.fetchRequest()
+        let predicate = NSPredicate(format: "eventTimestamp > \(cleanupTime)")
         fetchRequest.predicate = predicate
+        let deleteRequest = NSBatchDeleteRequest( fetchRequest: fetchRequest)
         do {
-            print("eventKeys to be updated before time \(currentTime)")
-
-            let events = try context.fetch(fetchRequest)
-            for event in events {
-                do {
-                    try context.save()
-                } catch {
-                    print("Failed to update retry event")
-                }
-            }
-
-            print("✅ Event updated successfully before time \(currentTime)")
+            print("eventKeys to be before time \(cleanupTime)")
+            try context.execute(deleteRequest)
+            print("✅ Event deleted successfully before time \(cleanupTime)")
         } catch {
-            print("❌ Failed to update Event: \(error.localizedDescription)")
+            print("❌ Failed to delete Event: \(error.localizedDescription)")
         }
     }
 }
