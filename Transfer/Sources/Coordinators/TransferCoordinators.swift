@@ -62,4 +62,8 @@ public class CreateTransferCoordinator: NSObject, HyperwalletCoordinator  {
         }
         controller.flowDelegate?.didFlowComplete(with: response)
     }
+
+    public func getController() -> UITableViewController {
+        return controller
+    }
 }
