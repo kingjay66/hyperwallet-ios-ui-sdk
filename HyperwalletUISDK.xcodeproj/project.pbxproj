@@ -1683,11 +1683,11 @@
 				DBCA3849225E8BAA00CD4137 /* View */,
 				DB551F4B22E1316400DD65C2 /* Common.h */,
 				A65312CA22FC037800A83D30 /* HyperwalletCoordinator.swift */,
+				2E8AFE5B2307668F002B6D24 /* HyperwalletCoordinatorTypes.swift */,
 				A65312CC22FC037800A83D30 /* HyperwalletFlowDelegate.swift */,
 				A65312CB22FC037800A83D30 /* InitializationDataField.swift */,
 				078B45802273A441005B0248 /* HyperwalletUI.swift */,
 				DB551F4C22E1316400DD65C2 /* Info.plist */,
-				2E8AFE5B2307668F002B6D24 /* HyperwalletCoordinatorTypes.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
