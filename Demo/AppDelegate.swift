@@ -32,11 +32,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        ThemeManager.applyWhiteTheme()
-//        ThemeManager.applyTheme()
-        ThemeManager.applyTransferTheme()
+       // ThemeManager.applyWhiteTheme()
         ThemeManager.applyTransferMethodTheme()
         ThemeManager.applyReceiptTheme()
+        ThemeManager.applyTheme()
+        ThemeManager.applyTransferTheme()
 
         // Avoid to display a black area during the view transaction in the UINavigationBar.
         window?.backgroundColor = Theme.ViewController.backgroundColor

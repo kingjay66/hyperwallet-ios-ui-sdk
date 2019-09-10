@@ -52,12 +52,11 @@ public final class AddTransferMethodController: UITableViewController {
     private lazy var createAccountButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(
-            greaterThanOrEqualToConstant: Theme.Cell.smallHeight).isActive = true
-
         button.accessibilityLabel = "create_account_label".localized()
         button.accessibilityIdentifier = "createAccountButton"
         button.setTitle("create_account_label".localized(), for: .normal)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
+        button.titleLabel?.font = Theme.Label.bodyFont
         button.setTitleColor(Theme.Button.color, for: UIControl.State.normal)
         button.addTarget(self, action: #selector(onTapped), for: .touchUpInside)
         return button
@@ -71,7 +70,7 @@ public final class AddTransferMethodController: UITableViewController {
     private lazy var infoView: UIStackView = {
         let label = UILabel()
         label.numberOfLines = 0
-
+        label.adjustsFontForContentSizeCategory = true
         let stackView = UIStackView(arrangedSubviews: [label])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -100,8 +99,7 @@ public final class AddTransferMethodController: UITableViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
-        view.addGestureRecognizer(tap)
+        largeTitle()
         initializeData()
         initializePresenter()
         presenter.loadTransferMethodConfigurationFields(forceUpdate ?? false)
@@ -127,11 +125,6 @@ public final class AddTransferMethodController: UITableViewController {
             AddTransferMethodCell.self,
             forCellReuseIdentifier: AddTransferMethodCell.reuseIdentifier
         )
-    }
-
-    @objc
-    func handleTap(sender: UITapGestureRecognizer) {
-        view.endEditing(true)
     }
 
     private func initializePresenter() {
@@ -418,7 +411,9 @@ extension AddTransferMethodController: AddTransferMethodView {
         }
 
         if let infoLabel = infoView.arrangedSubviews[0] as? UILabel {
-            infoLabel.attributedText = transferMethodType.formatFeesProcessingTime()
+            infoLabel.attributedText = transferMethodType
+                .formatFeesProcessingTime(font: Theme.Label.captionOne, color: Theme.Label.subTitleColor)
+            infoLabel.font = Theme.Label.captionOne
             let infoSection = AddTransferMethodSectionData(
                 fieldGroup: "INFORMATION",
                 cells: [infoView])
