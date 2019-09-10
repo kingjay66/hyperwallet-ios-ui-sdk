@@ -45,12 +45,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         return true
     }
-
-    public func applicationWillTerminate(_ application: UIApplication) {
-        FPTITracker.shared.flushData()
-    }
-
-    public func applicationDidEnterBackground(_ application: UIApplication) {
-        FPTITracker.shared.flushData()
-    }
 }
