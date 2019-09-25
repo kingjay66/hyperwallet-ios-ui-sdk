@@ -20,11 +20,18 @@
 import UserRepository
 #endif
 import HyperwalletSDK
+import Insights
+
+@objc
+public enum HyperwalletUIError: Int, Error {
+    case notInitialized
+}
 
 /// Class responsible for initializing the Hyperwallet UI SDK. It contains methods to interact with the controllers
 /// used to interact with the Hyperwallet platform
 public final class HyperwalletUI {
     private static var instance: HyperwalletUI?
+    private var userToken: String?
 
     /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
     public static var shared: HyperwalletUI {
@@ -38,12 +45,36 @@ public final class HyperwalletUI {
     /// it will be replaced.
     ///
     /// - Parameter provider: a provider of Hyperwallet authentication tokens.
-    public class func setup(_ provider: HyperwalletAuthenticationTokenProvider) {
-        instance = HyperwalletUI(provider)
+    public class func setup(_ provider: HyperwalletAuthenticationTokenProvider,
+                            completion: @escaping (HyperwalletUIError?) -> Void) {
+        instance = HyperwalletUI(provider, completion: { _ in
+            HyperwalletUI.clearInstance()
+            completion(HyperwalletUIError.notInitialized)
+        })
     }
 
-    private init(_ provider: HyperwalletAuthenticationTokenProvider) {
+    static func clearInstance() {
+        instance = nil
+    }
+
+    private init(_ provider: HyperwalletAuthenticationTokenProvider,
+                 completion: @escaping (HyperwalletErrorType?) -> Void) {
         Hyperwallet.setup(provider)
-        UserRepositoryFactory.shared.userRepository().getUser { _ in }
+        UserRepositoryFactory.shared.userRepository().getUser {  [weak self] result in
+            guard let strongSelf = self else {
+                return
+            }
+            switch result {
+            case .failure(let error):
+                print("error fetching user: \(error)")
+                completion(error)
+
+            case .success(let user):
+                strongSelf.userToken = user?.token
+                if let userToken = strongSelf.userToken {
+                    Insights.setupTracking(apiUrl: "apiUrl", userToken: userToken)
+                }
+            }
+        }
     }
 }

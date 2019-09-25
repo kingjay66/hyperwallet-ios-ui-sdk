@@ -18,8 +18,13 @@
 
 import Foundation
 
-final class HyperwalletBundle {
+public final class HyperwalletBundle {
     static let bundle: Bundle = {
         Bundle(for: HyperwalletBundle.self)
+    }()
+
+    public static let currentSDKAppVersion: String? = {
+        let version: String? = HyperwalletBundle.bundle.infoDictionary?["CFBundleShortVersionString"] as? String
+        return version
     }()
 }

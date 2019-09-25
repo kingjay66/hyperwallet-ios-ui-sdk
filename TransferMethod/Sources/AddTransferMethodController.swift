@@ -19,6 +19,7 @@
 import Common
 #endif
 import HyperwalletSDK
+import Insights
 import UIKit
 
 /// Controller to create a new transfer method.
@@ -107,6 +108,27 @@ final class AddTransferMethodController: UITableViewController {
         hideKeyboardWhenTappedAround()
         title = transferMethodTypeCode?.lowercased().localized()
         navigationItem.backBarButtonItem = UIBarButtonItem.back
+        sendImpression()
+    }
+
+    private func sendImpression() {
+        var eventParams = [String: Any]()
+        eventParams["hyperwallet_ea_type"] = transferMethodTypeCode
+        eventParams["hyperwallet_ea_country"] = country
+        eventParams["hyperwallet_ea_currency"] = currency
+        eventParams["hyperwallet_profile_type"] = profileType
+        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+        sendEvent(eventType: EventTagValue.impression, eventParams: eventParams)
+    }
+
+    private func sendEvent(eventType: String, eventParams: [String: Any]) {
+        if eventType == EventTagValue.click {
+            Insights.shared.trackClick(eventParams)
+        } else if eventType == EventTagValue.impression {
+            Insights.shared.trackImpression(eventParams)
+        } else {
+            Insights.shared.trackError(eventParams)
+        }
     }
 
     // MARK: - Setup Layout -
@@ -271,11 +293,24 @@ extension AddTransferMethodController: AddTransferMethodView {
         return widgets.map { (name: $0.name(), value: $0.value()) }
     }
 
+    private func sendError(errorMessage: String, errorCode: String, errorType: String) {
+        var eventParams = [String: Any]()
+        eventParams[EventTag.errorCode] = errorCode
+        eventParams[EventTag.errorType] = errorType
+        eventParams[EventTag.errorMessage] = errorMessage
+        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
+        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+        sendEvent(eventType: EventTagValue.error, eventParams: eventParams)
+    }
+
     func areAllFieldsValid() -> Bool {
         var isFormValid = true
         widgets.forEach {
             if $0.isValid() == false {
                 $0.showError()
+                if let errorMessage = $0.errorMessage() {
+                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventTagValue.errorTypeForm)
+                }
                 if isFormValid {
                     focusOnInvalidField($0)
                 }

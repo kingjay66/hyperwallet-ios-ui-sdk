@@ -91,7 +91,9 @@ class ViewController: UITableViewController {
         removeTransferMethodObserver()
 
         // Setup
-        HyperwalletUI.setup(IntegratorAuthenticationProvider(baseUrl, userToken))
+        HyperwalletUI.setup(IntegratorAuthenticationProvider(baseUrl, userToken)) { error in
+            print("error is: \(error?.localizedDescription)")
+        }
 
         exampleList = [
             .listTransferMethod: showExampleListTransferMethod,

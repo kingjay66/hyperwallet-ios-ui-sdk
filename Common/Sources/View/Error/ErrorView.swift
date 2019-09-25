@@ -58,16 +58,15 @@ public final class ErrorView {
         var eventParams = [String: Any]()
         if let hyperwalletErrors = error.getHyperwalletErrors()?.errorList {
             for hyperwalletError in hyperwalletErrors {
-                eventParams[FPTITag.errorCode] = hyperwalletError.code
-                eventParams[FPTITag.errorFieldName] = hyperwalletError.fieldName
-                eventParams[FPTITag.errorMessage] = hyperwalletError.message
-                eventParams[FPTITag.errorType] = FPTITagValue.errorTypeApi
-                eventParams[FPTITag.errorDescription] = Thread.callStackSymbols
+                eventParams[EventTag.errorCode] = hyperwalletError.code
+                eventParams[EventTag.errorFieldName] = hyperwalletError.fieldName
+                eventParams[EventTag.errorMessage] = hyperwalletError.message
+                eventParams[EventTag.errorType] = EventTagValue.errorTypeApi
+                eventParams[EventTag.errorDescription] = Thread.callStackSymbols
+                eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+                Insights.shared.trackError(eventParams)
             }
         }
-
-        FPTITracker.shared.trackError(eventParams)
-
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "error".localized(),
                                        message: error.getHyperwalletErrors()?.errorList?
@@ -78,6 +77,13 @@ public final class ErrorView {
     }
 
     private func unexpectedError() {
+        var eventParams = [String: Any]()
+        eventParams[EventTag.errorCode] = error.getHyperwalletErrors()?.errorList?.first?.code
+        eventParams[EventTag.errorType] = EventTagValue.errorTypeConnection
+        eventParams[EventTag.errorMessage] = error.errorDescription
+        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
+        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+        Insights.shared.trackError(eventParams)
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "unexpected_title".localized(),
                                        message: "unexpected_error_message".localized(),
@@ -86,12 +92,12 @@ public final class ErrorView {
 
     private func connectionError(_ handler: @escaping (UIAlertAction) -> Void) {
         var eventParams = [String: Any]()
-        eventParams[FPTITag.errorCode] = FPTITagValue.errorCodeConnection
-        eventParams[FPTITag.errorType] = FPTITagValue.errorTypeConnection
-        eventParams[FPTITag.errorMessage] = error.errorDescription
-        eventParams[FPTITag.errorDescription] = Thread.callStackSymbols
-        let fptiTrack: FPTITrack = FPTITracker.shared
-        fptiTrack.trackError(eventParams)
+        eventParams[EventTag.errorCode] = error.getHyperwalletErrors()?.errorList?.first?.code
+        eventParams[EventTag.errorType] = EventTagValue.errorTypeConnection
+        eventParams[EventTag.errorMessage] = error.errorDescription
+        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
+        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+        Insights.shared.trackError(eventParams)
         HyperwalletUtilViews.showAlertWithRetry(viewController,
                                                 title: "network_connection_error_title".localized(),
                                                 message: "network_connection_error_message".localized(),
