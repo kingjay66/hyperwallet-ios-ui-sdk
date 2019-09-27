@@ -29,7 +29,8 @@ public enum HyperwalletUIError: Int, Error {
 
 /// Class responsible for initializing the Hyperwallet UI SDK. It contains methods to interact with the controllers
 /// used to interact with the Hyperwallet platform
-public final class HyperwalletUI {
+@objcMembers
+public final class HyperwalletUI: NSObject {
     private static var instance: HyperwalletUI?
     private var userToken: String?
 

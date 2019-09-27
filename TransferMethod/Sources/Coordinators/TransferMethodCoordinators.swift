@@ -32,6 +32,11 @@ public class SelectTransferMethodTypeCoordinator: NSObject, HyperwalletCoordinat
         ThemeManager.applyTransferMethodTheme()
     }
 
+    public func getController() -> UITableViewController {
+        return controller
+    }
+
+    @objc
     public func navigate() {
         controller.flowDelegate = parentController
         parentController?.show(controller, sender: parentController)
@@ -78,6 +83,11 @@ public class AddTransferMethodCoordinator: NSObject, HyperwalletCoordinator {
         ThemeManager.applyTransferMethodTheme()
     }
 
+    public func getController() -> UITableViewController {
+        return controller
+    }
+
+    @objc
     public func navigate() {
         controller.flowDelegate = parentController
         parentController?.show(controller, sender: parentController)
@@ -117,6 +127,11 @@ public final class ListTransferMethodsCoordinator: NSObject, HyperwalletCoordina
     public func applyTheme() {
     }
 
+    public func getController() -> UITableViewController {
+        return controller
+    }
+
+    @objc
     public func navigate() {
         controller.flowDelegate = parentController
         parentController?.show(controller, sender: parentController)

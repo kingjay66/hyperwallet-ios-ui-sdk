@@ -32,6 +32,11 @@ public class ListReceiptCoordinator: NSObject, HyperwalletCoordinator {
         ThemeManager.applyReceiptTheme()
     }
 
+    public func getController() -> UITableViewController {
+        return controller
+    }
+
+    @objc
     public func navigate() {
         controller.flowDelegate = parentController
         parentController?.show(controller, sender: parentController)
