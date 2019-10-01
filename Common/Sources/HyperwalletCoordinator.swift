@@ -32,5 +32,4 @@ public protocol HyperwalletCoordinator {
     func navigateBackFromNextPage(with response: Any)
     /// Start the coordinator
     func start(initializationData: [InitializationDataField: Any]?, parentController: UIViewController)
-    func getController() -> UITableViewController
 }

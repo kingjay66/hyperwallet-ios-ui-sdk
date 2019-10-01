@@ -32,7 +32,7 @@ public enum HyperwalletUIError: Int, Error {
 @objcMembers
 public final class HyperwalletUI: NSObject {
     private static var instance: HyperwalletUI?
-    private var userToken: String?
+    public private(set) var userToken: String?
 
     /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
     public static var shared: HyperwalletUI {
@@ -59,23 +59,36 @@ public final class HyperwalletUI: NSObject {
     }
 
     private init(_ provider: HyperwalletAuthenticationTokenProvider,
-                 completion: @escaping (HyperwalletErrorType?) -> Void) {
-        Hyperwallet.setup(provider)
-        UserRepositoryFactory.shared.userRepository().getUser {  [weak self] result in
+                 completion: @escaping (Error?) -> Void) {
+        super.init()
+        Hyperwallet.setup(provider) { [weak self] configuration, error in
             guard let strongSelf = self else {
                 return
             }
-            switch result {
-            case .failure(let error):
-                print("error fetching user: \(error)")
-                completion(error)
-
-            case .success(let user):
-                strongSelf.userToken = user?.token
+            if let configuration = configuration {
+                strongSelf.userToken = configuration.userToken
                 if let userToken = strongSelf.userToken {
-                    Insights.setupTracking(apiUrl: "apiUrl", userToken: userToken)
+                    Insights.setup(apiUrl: "apiUrl", userToken: userToken, programToken: configuration.issuer)
                 }
+            } else {
+                completion(error)
             }
         }
+//        UserRepositoryFactory.shared.userRepository().getUser {  [weak self] result in
+//            guard let strongSelf = self else {
+//                return
+//            }
+//            switch result {
+//            case .failure(let error):
+//                print("error fetching user: \(error)")
+//                completion(error)
+//
+//            case .success(let user):
+//                strongSelf.userToken = user?.token
+//                if let userToken = strongSelf.userToken {
+//                    Insights.setup(apiUrl: "https://api.paypal.com", userToken: userToken, programToken: programToken)
+//                }
+//            }
+//        }
     }
 }

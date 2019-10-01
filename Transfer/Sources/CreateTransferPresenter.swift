@@ -105,6 +105,9 @@ final class CreateTransferPresenter {
         view.showLoading()
         if sourceToken != nil {
             loadTransferMethods()
+        } else if let userToken = HyperwalletUI.shared.userToken {
+            sourceToken = userToken
+            loadCreateTransfer()
         } else {
             userRepository.getUser { [weak self] result in
                 guard let strongSelf = self else {

@@ -66,8 +66,4 @@ public class ListReceiptCoordinator: NSObject, HyperwalletCoordinator {
         controller.initializationData = initializationData
         self.parentController = parentController
     }
-
-    public func getController() -> UITableViewController {
-        return controller
-    }
 }
