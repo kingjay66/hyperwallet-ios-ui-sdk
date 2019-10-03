@@ -68,7 +68,7 @@ public final class HyperwalletUI: NSObject {
             if let configuration = configuration {
                 strongSelf.userToken = configuration.userToken
                 if let userToken = strongSelf.userToken {
-                    Insights.setup(apiUrl: "apiUrl", userToken: userToken, programToken: configuration.issuer)
+                    Insights.setup(environment: "dev", programToken: configuration.issuer, url: "url", userToken: userToken)
                 }
             } else {
                 completion(error)

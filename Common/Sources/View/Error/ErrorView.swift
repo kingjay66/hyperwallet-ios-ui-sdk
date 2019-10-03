@@ -55,29 +55,29 @@ public final class ErrorView {
     ///
     /// - Parameter handler: to handle business error
     public func businessError(_ handler: ((UIAlertAction) -> Void)? = nil) {
-//        var eventParams = [String: Any]()
         if let hyperwalletErrors = error.getHyperwalletErrors()?.errorList {
-            for hyperwalletError in hyperwalletErrors {
-//                eventParams[EventTag.errorCode] = hyperwalletError.code
-//                eventParams[EventTag.errorFieldName] = hyperwalletError.fieldName
-//                eventParams[EventTag.errorMessage] = hyperwalletError.message
-//                eventParams[EventTag.errorType] = EventTagValue.errorTypeApi
-//                eventParams[EventTag.errorDescription] = Thread.callStackSymbols
-//                eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-//                eventParams[EventTag.environment] = "dev"
-                
-                var eventParams = EventParams()
-                eventParams.pageName = viewController.title
-                eventParams.errorCode = hyperwalletError.code
-                eventParams.errorMessage = hyperwalletError.code
-                eventParams.errorType = EventTagValue.errorTypeApi
-                eventParams.errorDescription = Thread.callStackSymbols.joined(separator: "\n")
-                eventParams.sdkVersion = HyperwalletBundle.currentSDKAppVersion
-                eventParams.hyperwalletEnvironment = "dev"
-                eventParams.errorFieldName = hyperwalletError.fieldName
-                
-//                Insights.shared.trackError(eventParams)
-                Insights.shared.trackEvents(eventType: EventTagValue.error, eventParams)
+            DispatchQueue.global().async {
+                for hyperwalletError in hyperwalletErrors {
+                    var eventParams = [String: Any]()
+                    eventParams[EventTag.errorCode] = hyperwalletError.code
+                    eventParams[EventTag.errorFieldName] = hyperwalletError.fieldName
+                    eventParams[EventTag.errorMessage] = hyperwalletError.message
+                    eventParams[EventTag.errorType] = EventTagValue.errorTypeApi
+                    eventParams[EventTag.errorDescription] = Thread.callStackSymbols
+                    eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
+                    eventParams[EventTag.environment] = "dev"
+                    Insights.shared.trackError(eventParams)
+                                
+//                    var eventParams = EventParams()
+//                    eventParams.pageName = "\(self.viewController)"
+//                    eventParams.errorCode = hyperwalletError.code
+//                    eventParams.errorMessage = hyperwalletError.code
+//                    eventParams.errorType = EventTagValue.errorTypeApi
+//                    eventParams.errorDescription = Thread.callStackSymbols.joined(separator: "\n")
+//                    eventParams.sdkVersion = HyperwalletBundle.currentSDKAppVersion
+//                    eventParams.errorFieldName = hyperwalletError.fieldName
+//                    Insights.shared.trackEvents(eventType: EventTagValue.error, eventParams)
+                }
             }
         }
         HyperwalletUtilViews.showAlert(viewController,
