@@ -137,6 +137,7 @@
 		9807B76B226442C60028A280 /* TransferMethodConfigurationBankAccountResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61522261E84D00C4A8AA /* TransferMethodConfigurationBankAccountResponse.json */; };
 		9807B76C226442C60028A280 /* TransferMethodConfigurationBankCardResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB614F2261E84C00C4A8AA /* TransferMethodConfigurationBankCardResponse.json */; };
 		9807B76D226442C60028A280 /* UnexpectedErrorResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61492261E84C00C4A8AA /* UnexpectedErrorResponse.json */; };
+		98892919234D3709002C1C73 /* InsightsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98892918234D3709002C1C73 /* InsightsInfo.swift */; };
 		98F3D754230C5BE400A8195F /* TransferFundsConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */; };
 		98F3D755230C5BEC00A8195F /* TransferFundsSelectDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */; };
 		98F3D756230C5BFC00A8195F /* TransferUserFundsConfirmationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */; };
@@ -710,6 +711,7 @@
 		988547C92294B829007B312C /* ListReceiptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptController.swift; sourceTree = "<group>"; };
 		988547CB2294B879007B312C /* ListReceiptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptPresenter.swift; sourceTree = "<group>"; };
 		988547CF22970FA1007B312C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		98892918234D3709002C1C73 /* InsightsInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsInfo.swift; sourceTree = "<group>"; };
 		98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferUserFundsConfirmationTest.swift; sourceTree = "<group>"; };
 		98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFundsSelectDestination.swift; sourceTree = "<group>"; };
 		98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFundsConfirmation.swift; sourceTree = "<group>"; };
@@ -1443,6 +1445,15 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		98892917234D36E7002C1C73 /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				98892918234D3709002C1C73 /* InsightsInfo.swift */,
+			);
+			name = Insights;
+			path = ../../TransferMethod/Sources/Insights;
+			sourceTree = "<group>";
+		};
 		A65312D022FC044300A83D30 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1610,6 +1621,7 @@
 				DBCA382E225E8BA900CD4137 /* Extensions */,
 				DBCA383F225E8BAA00CD4137 /* Generics */,
 				DBCA3843225E8BAA00CD4137 /* Helper */,
+				98892917234D36E7002C1C73 /* Insights */,
 				DBCA383C225E8BAA00CD4137 /* Localization */,
 				DB2EB66E22617AB100FBEB3D /* Resources */,
 				DBCA3849225E8BAA00CD4137 /* View */,
@@ -3183,6 +3195,7 @@
 			files = (
 				A65312D522FC055300A83D30 /* TransferMethodCoordinators.swift in Sources */,
 				DB551FCD22E1421E00DD65C2 /* NumberWidget.swift in Sources */,
+				98892919234D3709002C1C73 /* InsightsInfo.swift in Sources */,
 				DB551FDD22E1424200DD65C2 /* SelectTransferMethodTypeController.swift in Sources */,
 				DB551FCC22E1421E00DD65C2 /* ExpiryDatePickerView.swift in Sources */,
 				DB551FD022E1421E00DD65C2 /* SelectionWidgetCell.swift in Sources */,

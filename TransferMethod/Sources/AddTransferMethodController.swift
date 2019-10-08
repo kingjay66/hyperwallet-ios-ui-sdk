@@ -95,6 +95,10 @@ final class AddTransferMethodController: UITableViewController {
             self.forceUpdate = forceUpdate
             self.profileType = profileType
             self.transferMethodTypeCode = transferMethodTypeCode
+            trackImpression(country: country,
+                            currency: currency,
+                            profileType: profileType,
+                            transferMethodType: transferMethodTypeCode)
         }
     }
 
@@ -108,27 +112,19 @@ final class AddTransferMethodController: UITableViewController {
         hideKeyboardWhenTappedAround()
         title = transferMethodTypeCode?.lowercased().localized()
         navigationItem.backBarButtonItem = UIBarButtonItem.back
-        sendImpression()
     }
 
-    private func sendImpression() {
-        var eventParams = [String: Any]()
-        eventParams["hyperwallet_ea_type"] = transferMethodTypeCode
-        eventParams["hyperwallet_ea_country"] = country
-        eventParams["hyperwallet_ea_currency"] = currency
-        eventParams["hyperwallet_profile_type"] = profileType
-        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-        sendEvent(eventType: EventTagValue.impression, eventParams: eventParams)
-    }
+    private func trackImpression(country: String, currency: String, profileType: String, transferMethodType: String) {
+        let pageInfo = PageInfo(pageName: "\(self)",
+                                pageGroup: "TransferMethod",
+                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                rosettaLanguage: "en")
+        let impressionInfo = ImpressionInfo(impressionParams: ["country": country,
+                                                               "currency": currency,
+                                                               "profileType": profileType,
+                                                               "transferMethodType": transferMethodType])
+        Insights.shared.trackImpression(pageInfo: pageInfo, impressionInfo: impressionInfo)
 
-    private func sendEvent(eventType: String, eventParams: [String: Any]) {
-        if eventType == EventTagValue.click {
-            Insights.shared.trackClick(eventParams)
-        } else if eventType == EventTagValue.impression {
-            Insights.shared.trackImpression(eventParams)
-        } else {
-            Insights.shared.trackError(eventParams)
-        }
     }
 
     // MARK: - Setup Layout -
@@ -294,13 +290,17 @@ extension AddTransferMethodController: AddTransferMethodView {
     }
 
     private func sendError(errorMessage: String, errorCode: String, errorType: String) {
-        var eventParams = [String: Any]()
-        eventParams[EventTag.errorCode] = errorCode
-        eventParams[EventTag.errorType] = errorType
-        eventParams[EventTag.errorMessage] = errorMessage
-        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
-        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-        sendEvent(eventType: EventTagValue.error, eventParams: eventParams)
+        let pageInfo = PageInfo(pageName: "\(self)",
+                                pageGroup: "TransferMethod",
+                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                rosettaLanguage: "en")
+        let errorInfo = ErrorInfo(type: errorType,
+                                  message: errorMessage,
+                                  fieldName: "",
+                                  description: Thread.callStackSymbols.joined(separator: "\n"),
+                                  code: errorCode)
+        
+        Insights.shared.trackError(pageInfo: pageInfo, errorInfo: errorInfo)
     }
 
     func areAllFieldsValid() -> Bool {
@@ -309,7 +309,7 @@ extension AddTransferMethodController: AddTransferMethodView {
             if $0.isValid() == false {
                 $0.showError()
                 if let errorMessage = $0.errorMessage() {
-                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventTagValue.errorTypeForm)
+                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventConstants.errorTypeForm)
                 }
                 if isFormValid {
                     focusOnInvalidField($0)

@@ -20,6 +20,7 @@
 import Common
 #endif
 import HyperwalletSDK
+import Insights
 import UIKit
 
 /// Lists all transfer method types available based on the country, currency and profile type to create a new transfer
@@ -50,6 +51,17 @@ final class SelectTransferMethodTypeController: UITableViewController {
         setupCountryCurrencyTableView()
         setupTransferMethodTypeTableView()
         presenter.loadTransferMethodKeys(forceUpdate)
+    }
+
+    private func trackImpression() {
+        let pageInfo = PageInfo(pageName: "\(self)",
+                                pageGroup: "TransferMethod",
+                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                rosettaLanguage: "en")
+        let impressionInfo = ImpressionInfo(impressionParams: ["country": presenter.selectedCountry,
+                                                               "currency": presenter.selectedCurrency])
+        Insights.shared.trackImpression(pageInfo: pageInfo, impressionInfo: impressionInfo)
+
     }
 
     private func initializePresenter() {
@@ -124,6 +136,7 @@ extension SelectTransferMethodTypeController {
 extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
     func transferMethodTypeTableViewReloadData() {
         tableView.reloadData()
+        trackImpression()
     }
 
     func countryCurrencyTableViewReloadData() {

@@ -58,25 +58,17 @@ public final class ErrorView {
         if let hyperwalletErrors = error.getHyperwalletErrors()?.errorList {
             DispatchQueue.global().async {
                 for hyperwalletError in hyperwalletErrors {
-                    var eventParams = [String: Any]()
-                    eventParams[EventTag.errorCode] = hyperwalletError.code
-                    eventParams[EventTag.errorFieldName] = hyperwalletError.fieldName
-                    eventParams[EventTag.errorMessage] = hyperwalletError.message
-                    eventParams[EventTag.errorType] = EventTagValue.errorTypeApi
-                    eventParams[EventTag.errorDescription] = Thread.callStackSymbols
-                    eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-                    eventParams[EventTag.environment] = "dev"
-                    Insights.shared.trackError(eventParams)
-                                
-//                    var eventParams = EventParams()
-//                    eventParams.pageName = "\(self.viewController)"
-//                    eventParams.errorCode = hyperwalletError.code
-//                    eventParams.errorMessage = hyperwalletError.code
-//                    eventParams.errorType = EventTagValue.errorTypeApi
-//                    eventParams.errorDescription = Thread.callStackSymbols.joined(separator: "\n")
-//                    eventParams.sdkVersion = HyperwalletBundle.currentSDKAppVersion
-//                    eventParams.errorFieldName = hyperwalletError.fieldName
-//                    Insights.shared.trackEvents(eventType: EventTagValue.error, eventParams)
+                    let pageInfo = PageInfo(pageName: "\(self.viewController)",
+                                            pageGroup: "Error",
+                                            sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                            rosettaLanguage: "en")
+                    let errorInfo = ErrorInfo(type: EventConstants.errorTypeApi,
+                                              message: hyperwalletError.code,
+                                              fieldName: hyperwalletError.fieldName ?? "",
+                                              description: Thread.callStackSymbols.joined(separator: "\n"),
+                                              code: hyperwalletError.code)
+                    
+                    Insights.shared.trackError(pageInfo: pageInfo, errorInfo: errorInfo)
                 }
             }
         }
@@ -90,14 +82,16 @@ public final class ErrorView {
     }
 
     private func unexpectedError() {
-        var eventParams = [String: Any]()
-        eventParams[EventTag.errorCode] = error.getHyperwalletErrors()?.errorList?.first?.code
-        eventParams[EventTag.errorType] = EventTagValue.errorTypeConnection
-        eventParams[EventTag.errorMessage] = error.errorDescription
-        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
-        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-        eventParams[EventTag.environment] = "dev"
-        Insights.shared.trackError(eventParams)
+        let pageInfo = PageInfo(pageName: "\(self.viewController)",
+                                pageGroup: "Error",
+                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                rosettaLanguage: "en")
+        let errorInfo = ErrorInfo(type: EventConstants.errorTypeException,
+                                  message: error.errorDescription ?? "",
+                                  fieldName: "",
+                                  description: Thread.callStackSymbols.joined(separator: "\n"),
+                                  code: error.getHyperwalletErrors()?.errorList?.first?.code ?? "")
+        Insights.shared.trackError(pageInfo: pageInfo, errorInfo: errorInfo)
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "unexpected_title".localized(),
                                        message: "unexpected_error_message".localized(),
@@ -105,14 +99,16 @@ public final class ErrorView {
     }
 
     private func connectionError(_ handler: @escaping (UIAlertAction) -> Void) {
-        var eventParams = [String: Any]()
-        eventParams[EventTag.errorCode] = error.getHyperwalletErrors()?.errorList?.first?.code
-        eventParams[EventTag.errorType] = EventTagValue.errorTypeConnection
-        eventParams[EventTag.errorMessage] = error.errorDescription
-        eventParams[EventTag.errorDescription] = Thread.callStackSymbols
-        eventParams[EventTag.sdkVersion] = HyperwalletBundle.currentSDKAppVersion
-        eventParams[EventTag.environment] = "dev"
-        Insights.shared.trackError(eventParams)
+        let pageInfo = PageInfo(pageName: "\(self.viewController)",
+                                pageGroup: "Error",
+                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                rosettaLanguage: "en")
+        let errorInfo = ErrorInfo(type: EventConstants.errorTypeConnection,
+                                  message: error.errorDescription ?? "",
+                                  fieldName: "",
+                                  description: Thread.callStackSymbols.joined(separator: "\n"),
+                                  code: error.getHyperwalletErrors()?.errorList?.first?.code ?? "")
+        Insights.shared.trackError(pageInfo: pageInfo, errorInfo: errorInfo)
         HyperwalletUtilViews.showAlertWithRetry(viewController,
                                                 title: "network_connection_error_title".localized(),
                                                 message: "network_connection_error_message".localized(),
