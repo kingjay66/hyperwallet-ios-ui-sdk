@@ -54,14 +54,22 @@ final class SelectTransferMethodTypeController: UITableViewController {
     }
 
     private func trackImpression() {
-        let pageInfo = PageInfo(pageName: "\(self)",
-                                pageGroup: "TransferMethod",
-                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
-                                rosettaLanguage: "en")
-        let impressionInfo = ImpressionInfo(impressionParams: ["country": presenter.selectedCountry,
-                                                               "currency": presenter.selectedCurrency])
-        Insights.shared.trackImpression(pageInfo: pageInfo, impressionInfo: impressionInfo)
+        let impressionParams = [EventParamsTag.country: presenter.selectedCountry,
+                                EventParamsTag.currency: presenter.selectedCurrency]
+        Insights.shared.trackImpression(pageName: "\(self)",
+                                        pageGroup: "TransferMethod",
+                                        impressionParams: impressionParams)
+    }
 
+    private func trackClick(country: String, currency: String, profileType: String, transferMethodType: String) {
+        let clickParams = [EventParamsTag.country: country,
+                           EventParamsTag.currency: currency,
+                           EventParamsTag.profileType: profileType,
+                           EventParamsTag.transferMethodType: transferMethodType]
+        Insights.shared.trackClick(pageName: "\(self)",
+                                   pageGroup: "TransferMethod",
+                                   link: "Selected Transfer Method",
+                                   clickParams: clickParams)
     }
 
     private func initializePresenter() {
@@ -147,6 +155,10 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
                                                currency: String,
                                                profileType: String,
                                                transferMethodTypeCode: String) {
+        trackClick(country: country,
+                   currency: currency,
+                   profileType: profileType,
+                   transferMethodType: transferMethodTypeCode)
         var initializationData = [InitializationDataField: Any]()
         initializationData[InitializationDataField.country]  = country
         initializationData[InitializationDataField.currency]  = currency
@@ -190,6 +202,14 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
         genericTableView.shouldMarkCellAction = markCellHandler
         genericTableView.filterContentForSearchTextAction = filterContentHandler
         show(genericTableView, sender: self)
+    }
+
+    private func trackClick(title: String) {
+        let clickParams = ["hyperwallet_ea_country": title]
+        Insights.shared.trackClick(pageName: "\(self)",
+                                   pageGroup: "TransferMethod",
+                                   link: "Select \(title)",
+                                   clickParams: clickParams)
     }
 }
 

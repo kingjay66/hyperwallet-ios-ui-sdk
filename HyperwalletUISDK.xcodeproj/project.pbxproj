@@ -137,7 +137,8 @@
 		9807B76B226442C60028A280 /* TransferMethodConfigurationBankAccountResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61522261E84D00C4A8AA /* TransferMethodConfigurationBankAccountResponse.json */; };
 		9807B76C226442C60028A280 /* TransferMethodConfigurationBankCardResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB614F2261E84C00C4A8AA /* TransferMethodConfigurationBankCardResponse.json */; };
 		9807B76D226442C60028A280 /* UnexpectedErrorResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61492261E84C00C4A8AA /* UnexpectedErrorResponse.json */; };
-		98892919234D3709002C1C73 /* InsightsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98892918234D3709002C1C73 /* InsightsInfo.swift */; };
+		9840E24C234EAE4A0015A64E /* Insights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9840E24B234EAE4A0015A64E /* Insights.framework */; };
+		9840E24D234EAE4A0015A64E /* Insights.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9840E24B234EAE4A0015A64E /* Insights.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		98F3D754230C5BE400A8195F /* TransferFundsConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */; };
 		98F3D755230C5BEC00A8195F /* TransferFundsSelectDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */; };
 		98F3D756230C5BFC00A8195F /* TransferUserFundsConfirmationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */; };
@@ -531,6 +532,7 @@
 			files = (
 				4A37DB9322E8B0040085A329 /* TransferRepository.framework in Embed Frameworks */,
 				4A37DB9222E8AFEE0085A329 /* Transfer.framework in Embed Frameworks */,
+				9840E24D234EAE4A0015A64E /* Insights.framework in Embed Frameworks */,
 				DB52960D22E235EF00657F50 /* TransferMethod.framework in Embed Frameworks */,
 				DB52960922E235EF00657F50 /* Common.framework in Embed Frameworks */,
 				DB52961A22E2361600657F50 /* TransferMethodRepository.framework in Embed Frameworks */,
@@ -707,11 +709,11 @@
 		98175428228DE42E0019159A /* ReceiptTransactionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptTransactionCell.swift; sourceTree = "<group>"; };
 		98220B8B2265793700055E18 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9826056722822E8A000CCA2D /* UIToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIToolbar.swift; sourceTree = "<group>"; };
+		9840E24B234EAE4A0015A64E /* Insights.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Insights.framework; path = Carthage/Build/iOS/Insights.framework; sourceTree = "<group>"; };
 		98541F142273D72C007D4238 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		988547C92294B829007B312C /* ListReceiptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptController.swift; sourceTree = "<group>"; };
 		988547CB2294B879007B312C /* ListReceiptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptPresenter.swift; sourceTree = "<group>"; };
 		988547CF22970FA1007B312C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
-		98892918234D3709002C1C73 /* InsightsInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsInfo.swift; sourceTree = "<group>"; };
 		98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferUserFundsConfirmationTest.swift; sourceTree = "<group>"; };
 		98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFundsSelectDestination.swift; sourceTree = "<group>"; };
 		98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFundsConfirmation.swift; sourceTree = "<group>"; };
@@ -972,6 +974,7 @@
 			files = (
 				DB52960822E235EF00657F50 /* Common.framework in Frameworks */,
 				DB52961022E235EF00657F50 /* Receipt.framework in Frameworks */,
+				9840E24C234EAE4A0015A64E /* Insights.framework in Frameworks */,
 				DB52961522E2361600657F50 /* ReceiptRepository.framework in Frameworks */,
 				4A9A7C1122E880730022E573 /* Transfer.framework in Frameworks */,
 				4A9A7C1222E880780022E573 /* TransferRepository.framework in Frameworks */,
@@ -1445,15 +1448,6 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		98892917234D36E7002C1C73 /* Insights */ = {
-			isa = PBXGroup;
-			children = (
-				98892918234D3709002C1C73 /* InsightsInfo.swift */,
-			);
-			name = Insights;
-			path = ../../TransferMethod/Sources/Insights;
-			sourceTree = "<group>";
-		};
 		A65312D022FC044300A83D30 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
@@ -1621,7 +1615,6 @@
 				DBCA382E225E8BA900CD4137 /* Extensions */,
 				DBCA383F225E8BAA00CD4137 /* Generics */,
 				DBCA3843225E8BAA00CD4137 /* Helper */,
-				98892917234D36E7002C1C73 /* Insights */,
 				DBCA383C225E8BAA00CD4137 /* Localization */,
 				DB2EB66E22617AB100FBEB3D /* Resources */,
 				DBCA3849225E8BAA00CD4137 /* View */,
@@ -1788,6 +1781,7 @@
 		DBAE17C0225F136A00C5CC60 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9840E24B234EAE4A0015A64E /* Insights.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3195,7 +3189,6 @@
 			files = (
 				A65312D522FC055300A83D30 /* TransferMethodCoordinators.swift in Sources */,
 				DB551FCD22E1421E00DD65C2 /* NumberWidget.swift in Sources */,
-				98892919234D3709002C1C73 /* InsightsInfo.swift in Sources */,
 				DB551FDD22E1424200DD65C2 /* SelectTransferMethodTypeController.swift in Sources */,
 				DB551FCC22E1421E00DD65C2 /* ExpiryDatePickerView.swift in Sources */,
 				DB551FD022E1421E00DD65C2 /* SelectionWidgetCell.swift in Sources */,

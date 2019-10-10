@@ -39,11 +39,7 @@ final class AddTransferMethodController: UITableViewController {
     }()
 
     // MARK: - Properties -
-    private var country: String?
-    private var currency: String?
     private var forceUpdate: Bool?
-    private var profileType: String?
-    private var transferMethodTypeCode: String?
     private var processingView: ProcessingView?
     private var spinnerView: SpinnerView?
     private var presenter: AddTransferMethodPresenter!
@@ -65,6 +61,7 @@ final class AddTransferMethodController: UITableViewController {
 
     @objc
     private func onTapped() {
+        trackClick()
         presenter.createTransferMethod()
     }
 
@@ -83,18 +80,20 @@ final class AddTransferMethodController: UITableViewController {
         )
         return stackView
     }()
-    private func initializeData() {
+    private func initializeDataAndPresenter() {
         if let country = initializationData?[InitializationDataField.country] as? String,
             let currency = initializationData?[InitializationDataField.currency] as? String,
             let forceUpdate = initializationData?[InitializationDataField.forceUpdateData] as? Bool,
             let profileType = initializationData?[InitializationDataField.profileType] as? String,
             let transferMethodTypeCode = initializationData?[InitializationDataField.transferMethodTypeCode]
                 as? String {
-            self.country = country
-            self.currency = currency
+            title = transferMethodTypeCode.lowercased().localized()
             self.forceUpdate = forceUpdate
-            self.profileType = profileType
-            self.transferMethodTypeCode = transferMethodTypeCode
+            presenter = AddTransferMethodPresenter(self,
+                                                   country,
+                                                   currency,
+                                                   profileType,
+                                                   transferMethodTypeCode)
             trackImpression(country: country,
                             currency: currency,
                             profileType: profileType,
@@ -105,25 +104,33 @@ final class AddTransferMethodController: UITableViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         largeTitle()
-        initializeData()
-        initializePresenter()
+        initializeDataAndPresenter()
         presenter.loadTransferMethodConfigurationFields(forceUpdate ?? false)
         setupLayout()
         hideKeyboardWhenTappedAround()
-        title = transferMethodTypeCode?.lowercased().localized()
+
         navigationItem.backBarButtonItem = UIBarButtonItem.back
     }
 
+    private func trackClick() {
+        let clickParams = [EventParamsTag.country: presenter.country,
+                           EventParamsTag.currency: presenter.currency,
+                           EventParamsTag.profileType: presenter.profileType,
+                           EventParamsTag.transferMethodType: presenter.transferMethodTypeCode]
+        Insights.shared.trackClick(pageName: "\(self)",
+                                   pageGroup: "TransferMethod",
+                                   link: createAccountButton.titleLabel?.text ?? "",
+                                   clickParams: clickParams)
+    }
+
     private func trackImpression(country: String, currency: String, profileType: String, transferMethodType: String) {
-        let pageInfo = PageInfo(pageName: "\(self)",
-                                pageGroup: "TransferMethod",
-                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
-                                rosettaLanguage: "en")
-        let impressionInfo = ImpressionInfo(impressionParams: ["country": country,
-                                                               "currency": currency,
-                                                               "profileType": profileType,
-                                                               "transferMethodType": transferMethodType])
-        Insights.shared.trackImpression(pageInfo: pageInfo, impressionInfo: impressionInfo)
+        let impressionParams = [EventParamsTag.country: presenter.country,
+                                EventParamsTag.currency: presenter.currency,
+                                EventParamsTag.profileType: presenter.profileType,
+                                EventParamsTag.transferMethodType: presenter.transferMethodTypeCode]
+        Insights.shared.trackImpression(pageName: "\(self)",
+                                        pageGroup: "TransferMethod",
+                                        impressionParams: impressionParams)
 
     }
 
@@ -143,21 +150,6 @@ final class AddTransferMethodController: UITableViewController {
             AddTransferMethodCell.self,
             forCellReuseIdentifier: AddTransferMethodCell.reuseIdentifier
         )
-    }
-
-    private func initializePresenter() {
-        if let country = country,
-            let currency = currency,
-            let profileType = profileType,
-            let transferMethodTypeCode = transferMethodTypeCode {
-            presenter = AddTransferMethodPresenter(self,
-                                                   country,
-                                                   currency,
-                                                   profileType,
-                                                   transferMethodTypeCode)
-        } else {
-            fatalError("Required data not provided in initializePresenter")
-        }
     }
 }
 
@@ -289,18 +281,14 @@ extension AddTransferMethodController: AddTransferMethodView {
         return widgets.map { (name: $0.name(), value: $0.value()) }
     }
 
-    private func sendError(errorMessage: String, errorCode: String, errorType: String) {
-        let pageInfo = PageInfo(pageName: "\(self)",
-                                pageGroup: "TransferMethod",
-                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
-                                rosettaLanguage: "en")
+    private func sendError(errorMessage: String, errorCode: String, errorType: String, fieldName: String) {
         let errorInfo = ErrorInfo(type: errorType,
                                   message: errorMessage,
-                                  fieldName: "",
+                                  fieldName: fieldName,
                                   description: Thread.callStackSymbols.joined(separator: "\n"),
                                   code: errorCode)
         
-        Insights.shared.trackError(pageInfo: pageInfo, errorInfo: errorInfo)
+        Insights.shared.trackError(pageName: "\(self)", pageGroup: "TransferMethod", errorInfo: errorInfo)
     }
 
     func areAllFieldsValid() -> Bool {
@@ -309,7 +297,7 @@ extension AddTransferMethodController: AddTransferMethodView {
             if $0.isValid() == false {
                 $0.showError()
                 if let errorMessage = $0.errorMessage() {
-                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventConstants.errorTypeForm)
+                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventConstants.errorTypeForm, fieldName: $0.name())
                 }
                 if isFormValid {
                     focusOnInvalidField($0)
@@ -431,8 +419,8 @@ extension AddTransferMethodController: AddTransferMethodView {
             let newWidgets = fields.map(WidgetFactory.newWidget)
             let section = AddTransferMethodSectionData(
                 fieldGroup: fieldGroup,
-                country: country,
-                currency: currency,
+                country: presenter.country,
+                currency: presenter.currency,
                 cells: newWidgets
             )
             presenter.sectionData.append(section)
