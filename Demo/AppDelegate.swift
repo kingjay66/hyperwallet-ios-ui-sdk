@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-       // ThemeManager.applyWhiteTheme()
+        ThemeManager.applyWhiteTheme()
         ThemeManager.applyTransferMethodTheme()
         ThemeManager.applyReceiptTheme()
         ThemeManager.applyTheme()
@@ -43,6 +43,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set the default tint color
         window?.tintColor = Theme.Button.color
 
+        storeStackTrace()
+
+//        let exception = NSException(name: NSExceptionName(rawValue: "arbitrary"), reason: "arbitrary reason", userInfo: nil)
+//        exception.raise()
+        
         return true
+    }
+    
+    func storeStackTrace() {
+       NSSetUncaughtExceptionHandler { (exception) in
+           let stackTrace = exception.callStackReturnAddresses
+           print("exception is: %@", exception)
+           print("Stack trace: \(stackTrace)")
+       }
     }
 }

@@ -37,6 +37,9 @@ public final class HyperwalletUI: NSObject {
     /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
     public static var shared: HyperwalletUI {
         guard let instance = instance else {
+//            fatalError("Call HyperwalletUI.setup(_:) before accessing HyperwalletUI.shared")
+            let exception = NSException(name: NSExceptionName(rawValue: "arbitrary"), reason: "arbitrary reason", userInfo: nil)
+            exception.raise()
             fatalError("Call HyperwalletUI.setup(_:) before accessing HyperwalletUI.shared")
         }
         return instance
@@ -68,7 +71,11 @@ public final class HyperwalletUI: NSObject {
             if let configuration = configuration {
                 strongSelf.userToken = configuration.userToken
                 if let userToken = strongSelf.userToken {
-                    Insights.setup(environment: "dev", programToken: configuration.issuer, url: "url", userToken: userToken)
+                    Insights.setup(environment: "dev",
+                                   programToken: configuration.issuer,
+                                   sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                                   url: "url",
+                                   userToken: userToken)
                 }
             } else {
                 completion(error)

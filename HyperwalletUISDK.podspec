@@ -11,6 +11,7 @@ Pod::Spec.new do |spec|
     spec.requires_arc          = true
     spec.swift_version         = '5.0'
     spec.dependency 'HyperwalletSDK', '1.0.0-beta04'
+    spec.dependency 'Insights', '1.0.0-beta01'
 
     spec.default_subspec = 'TransferMethod', 'Receipt', 'Transfer'
 
@@ -60,7 +61,7 @@ Pod::Spec.new do |spec|
     spec.test_spec 'Tests' do |ts|
         ts.source_files = '**/Tests/**/*.swift'
         ts.resources = '**/Tests/**/*.json'
-        ts.dependency 'Hippolyte', '0.6.0'
+        ts.dependency 'Hippolyte', '1.0.0'
     end
 
     spec.test_spec 'UITests' do |ts|
