@@ -30,12 +30,13 @@ protocol AddTransferMethodView: class {
     func showConfirmation(handler: @escaping () -> Void)
     func showError( title: String, message: String)
     func showError(_ error: HyperwalletErrorType, _ handler: (() -> Void)?)
-    func showBusinessError(_ error: HyperwalletErrorType, _ handler: @escaping () -> Void)
+//    func showBusinessError(_ error: HyperwalletErrorType, _ handler: @escaping () -> Void)
     func showLoading()
     func showProcessing()
     func showTransferMethodFields(_ fieldGroups: [HyperwalletFieldGroup],
                                   _ transferMethodType: HyperwalletTransferMethodType)
     func showFooterViewWithUpdatedSectionData(for sections: [AddTransferMethodSectionData])
+    func trackError(errorMessage: String, errorCode: String, errorType: String, fieldName: String)
 }
 
 final class AddTransferMethodPresenter {
@@ -99,9 +100,9 @@ final class AddTransferMethodPresenter {
     }
 
     func createTransferMethod() {
-        guard view.areAllFieldsValid() else {
-            return
-        }
+//        guard view.areAllFieldsValid() else {
+//            return
+//        }
 
         guard let hyperwalletTransferMethod = buildHyperwalletTransferMethod() else {
             view.showError(title: "error".localized(), message: "transfer_method_not_supported_message".localized())
@@ -143,7 +144,7 @@ final class AddTransferMethodPresenter {
             resetErrorMessagesForAllSections()
             if let errors = error.getHyperwalletErrors()?.errorList, errors.isNotEmpty {
                 if errors.contains(where: { $0.fieldName == nil }) {
-                    view.showBusinessError(error, { [weak self] () -> Void in self?.updateFooterContent(errors) })
+                    view.showError(error, { [weak self] () -> Void in self?.updateFooterContent(errors) })
                 } else {
                     updateFooterContent(errors)
                 }
@@ -211,6 +212,10 @@ final class AddTransferMethodPresenter {
         for widget in errorWidgets {
             // get the errorMessage by widget name and update widget UI
             if let error = errors.first(where: { error in widget.name() == error.fieldName }) {
+                view.trackError(errorMessage: error.message,
+                                errorCode: error.code,
+                                errorType: "API",
+                                fieldName: widget.name())
                 widget.showError()
                 errorMessages.append(error.message)
             }

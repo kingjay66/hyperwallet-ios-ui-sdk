@@ -46,6 +46,8 @@ protocol SelectTransferMethodTypeView: class {
     func hideLoading()
     func transferMethodTypeTableViewReloadData()
     func countryCurrencyTableViewReloadData()
+    func trackCountryClick()
+    func trackCurrencyClick()
 }
 
 final class SelectTransferMethodTypePresenter {
@@ -198,7 +200,10 @@ final class SelectTransferMethodTypePresenter {
 
     private func selectCountryHandler() -> SelectTransferMethodTypeView.SelectItemHandler {
         return { (country) in
-            if let country = country.value { self.selectedCountry = country }
+            if let country = country.value {
+                self.selectedCountry = country
+                self.view.trackCountryClick()
+            }
             self.transferMethodConfigurationRepository
                 .getKeys(completion: self.getKeysHandler(success: { (result) in
                     self.loadCurrency(result)
@@ -209,7 +214,10 @@ final class SelectTransferMethodTypePresenter {
 
     private func selectCurrencyHandler() -> SelectTransferMethodTypeView.SelectItemHandler {
         return { (currency) in
-            if let currency = currency.value { self.selectedCurrency = currency }
+            if let currency = currency.value {
+                self.selectedCurrency = currency
+                self.view.trackCurrencyClick()
+            }
             self.transferMethodConfigurationRepository.getKeys(completion: self.getKeysHandler(
                 success: { (result) in
                     self.loadTransferMethodTypes(result)

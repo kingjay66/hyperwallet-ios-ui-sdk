@@ -298,7 +298,7 @@ extension CreateTransferController: CreateTransferView {
     }
 
     func showError(_ error: HyperwalletErrorType, _ retry: (() -> Void)?) {
-        let errorView = ErrorView(viewController: self, error: error)
+        let errorView = ErrorView(viewController: self, error: error, pageName: "create-transfer", pageGroup: "transfer")
         errorView.show(retry)
     }
 

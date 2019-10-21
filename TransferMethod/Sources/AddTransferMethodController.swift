@@ -29,7 +29,8 @@ import UIKit
 final class AddTransferMethodController: UITableViewController {
     typealias ButtonHandler = () -> Void
     private var defaultHeaderHeight = CGFloat(38.0)
-
+    private let pageName = "transfer-method:add:collect-transfer-method-information"
+    private let pageGroup = "transfer-method"
     private let emptyHeaderHeight: CGFloat = {
         if #available(iOS 11.0, *) {
             return CGFloat(1.0)
@@ -80,6 +81,7 @@ final class AddTransferMethodController: UITableViewController {
         )
         return stackView
     }()
+
     private func initializeDataAndPresenter() {
         if let country = initializationData?[InitializationDataField.country] as? String,
             let currency = initializationData?[InitializationDataField.currency] as? String,
@@ -94,10 +96,6 @@ final class AddTransferMethodController: UITableViewController {
                                                    currency,
                                                    profileType,
                                                    transferMethodTypeCode)
-            trackImpression(country: country,
-                            currency: currency,
-                            profileType: profileType,
-                            transferMethodType: transferMethodTypeCode)
         }
     }
 
@@ -108,30 +106,33 @@ final class AddTransferMethodController: UITableViewController {
         presenter.loadTransferMethodConfigurationFields(forceUpdate ?? false)
         setupLayout()
         hideKeyboardWhenTappedAround()
+        trackImpression()
 
         navigationItem.backBarButtonItem = UIBarButtonItem.back
     }
 
     private func trackClick() {
-        let clickParams = [EventParamsTag.country: presenter.country,
-                           EventParamsTag.currency: presenter.currency,
-                           EventParamsTag.profileType: presenter.profileType,
-                           EventParamsTag.transferMethodType: presenter.transferMethodTypeCode]
-        Insights.shared.trackClick(pageName: "\(self)",
-                                   pageGroup: "TransferMethod",
-                                   link: createAccountButton.titleLabel?.text ?? "",
+        let clickParams = [InsightsTags.country: presenter.country,
+                           InsightsTags.currency: presenter.currency,
+                           InsightsTags.profileType: presenter.profileType,
+                           InsightsTags.transferMethodType: presenter.transferMethodTypeCode]
+        Insights.shared?.trackClick(pageName: pageName,
+                                   pageGroup: pageGroup,
+                                   link: "create-transfer-method",
                                    clickParams: clickParams)
     }
 
-    private func trackImpression(country: String, currency: String, profileType: String, transferMethodType: String) {
-        let impressionParams = [EventParamsTag.country: presenter.country,
-                                EventParamsTag.currency: presenter.currency,
-                                EventParamsTag.profileType: presenter.profileType,
-                                EventParamsTag.transferMethodType: presenter.transferMethodTypeCode]
-        Insights.shared.trackImpression(pageName: "\(self)",
-                                        pageGroup: "TransferMethod",
+    private func trackImpression(goal: String? = nil) {
+        var impressionParams = [InsightsTags.country: presenter.country,
+                                InsightsTags.currency: presenter.currency,
+                                InsightsTags.profileType: presenter.profileType,
+                                InsightsTags.transferMethodType: presenter.transferMethodTypeCode]
+        if let goal = goal {
+            impressionParams[InsightsTags.goal] = goal
+        }
+        Insights.shared?.trackImpression(pageName: pageName,
+                                        pageGroup: pageGroup,
                                         impressionParams: impressionParams)
-
     }
 
     // MARK: - Setup Layout -
@@ -281,14 +282,14 @@ extension AddTransferMethodController: AddTransferMethodView {
         return widgets.map { (name: $0.name(), value: $0.value()) }
     }
 
-    private func sendError(errorMessage: String, errorCode: String, errorType: String, fieldName: String) {
+    func trackError(errorMessage: String, errorCode: String, errorType: String, fieldName: String) {
         let errorInfo = ErrorInfo(type: errorType,
                                   message: errorMessage,
                                   fieldName: fieldName,
                                   description: Thread.callStackSymbols.joined(separator: "\n"),
                                   code: errorCode)
         
-        Insights.shared.trackError(pageName: "\(self)", pageGroup: "TransferMethod", errorInfo: errorInfo)
+        Insights.shared?.trackError(pageName: pageName, pageGroup: pageGroup, errorInfo: errorInfo)
     }
 
     func areAllFieldsValid() -> Bool {
@@ -297,7 +298,7 @@ extension AddTransferMethodController: AddTransferMethodView {
             if $0.isValid() == false {
                 $0.showError()
                 if let errorMessage = $0.errorMessage() {
-                    sendError(errorMessage: errorMessage, errorCode: "", errorType: EventConstants.errorTypeForm, fieldName: $0.name())
+                    trackError(errorMessage: errorMessage, errorCode: "", errorType: "FORM", fieldName: $0.name())
                 }
                 if isFormValid {
                     focusOnInvalidField($0)
@@ -332,6 +333,7 @@ extension AddTransferMethodController: AddTransferMethodView {
     }
 
     func showConfirmation(handler: @escaping (() -> Void)) {
+        trackImpression(goal: "transfer-method-created")
         processingView?.hide(with: .complete)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             handler()
@@ -351,14 +353,14 @@ extension AddTransferMethodController: AddTransferMethodView {
     }
 
     func showError(_ error: HyperwalletErrorType, _ handler: (() -> Void)?) {
-        let errorView = ErrorView(viewController: self, error: error)
+        let errorView = ErrorView(viewController: self, error: error, pageName: pageName, pageGroup: pageGroup)
         errorView.show(handler)
     }
 
-    func showBusinessError(_ error: HyperwalletErrorType, _ handler: @escaping (() -> Void)) {
-        let errorView = ErrorView(viewController: self, error: error)
-        errorView.businessError({ (_) in handler() })
-    }
+//    func showBusinessError(_ error: HyperwalletErrorType, _ handler: @escaping (() -> Void)) {
+//        let errorView = ErrorView(viewController: self, error: error)
+//        errorView.show(handler)
+//    }
 
     func notifyTransferMethodAdded(_ transferMethod: HyperwalletTransferMethod) {
         DispatchQueue.global(qos: .background).async {

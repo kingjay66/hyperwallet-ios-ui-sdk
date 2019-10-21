@@ -151,7 +151,7 @@ extension ListTransferMethodController: ListTransferMethodView {
     }
 
     func showError(_ error: HyperwalletErrorType, _ retry: (() -> Void)?) {
-        let errorView = ErrorView(viewController: self, error: error)
+        let errorView = ErrorView(viewController: self, error: error, pageName: "list-transfer-methods", pageGroup: "transferMethods")
         errorView.show(retry)
     }
 

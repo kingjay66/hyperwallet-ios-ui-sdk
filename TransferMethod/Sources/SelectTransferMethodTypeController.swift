@@ -27,6 +27,8 @@ import UIKit
 /// method (bank account, bank card, PayPal account, prepaid card, paper check).
 final class SelectTransferMethodTypeController: UITableViewController {
     // MARK: - Outlets
+    private let pageName = "transfer-method:add:select-transfer-method"
+    private let pageGroup = "transfer-method"
     private var countryCurrencyTableView: UITableView!
 
     private var spinnerView: SpinnerView?
@@ -54,21 +56,21 @@ final class SelectTransferMethodTypeController: UITableViewController {
     }
 
     private func trackImpression() {
-        let impressionParams = [EventParamsTag.country: presenter.selectedCountry,
-                                EventParamsTag.currency: presenter.selectedCurrency]
-        Insights.shared.trackImpression(pageName: "\(self)",
-                                        pageGroup: "TransferMethod",
+        let impressionParams = [InsightsTags.country: presenter.selectedCountry,
+                                InsightsTags.currency: presenter.selectedCurrency]
+        Insights.shared?.trackImpression(pageName: pageName,
+                                        pageGroup: pageGroup,
                                         impressionParams: impressionParams)
+
     }
 
-    private func trackClick(country: String, currency: String, profileType: String, transferMethodType: String) {
-        let clickParams = [EventParamsTag.country: country,
-                           EventParamsTag.currency: currency,
-                           EventParamsTag.profileType: profileType,
-                           EventParamsTag.transferMethodType: transferMethodType]
-        Insights.shared.trackClick(pageName: "\(self)",
-                                   pageGroup: "TransferMethod",
-                                   link: "Selected Transfer Method",
+    private func trackTransferMethodClick(country: String, currency: String, transferMethodType: String) {
+        let clickParams = [InsightsTags.country: country,
+                           InsightsTags.currency: currency,
+                           InsightsTags.transferMethodType: transferMethodType]
+        Insights.shared?.trackClick(pageName: pageName,
+                                   pageGroup: pageGroup,
+                                   link: "select-transfer-method",
                                    clickParams: clickParams)
     }
 
@@ -135,6 +137,9 @@ extension SelectTransferMethodTypeController {
     }
 
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        trackTransferMethodClick(country: presenter.selectedCountry,
+                                 currency: presenter.selectedCurrency,
+                                 transferMethodType: presenter.sectionData[indexPath.row].code ?? "")
         presenter.navigateToAddTransferMethod(indexPath.row)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -155,10 +160,7 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
                                                currency: String,
                                                profileType: String,
                                                transferMethodTypeCode: String) {
-        trackClick(country: country,
-                   currency: currency,
-                   profileType: profileType,
-                   transferMethodType: transferMethodTypeCode)
+        trackTransferMethodClick(country: country, currency: currency, transferMethodType: transferMethodTypeCode)
         var initializationData = [InitializationDataField: Any]()
         initializationData[InitializationDataField.country]  = country
         initializationData[InitializationDataField.currency]  = currency
@@ -181,7 +183,7 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
     }
 
     func showError(_ error: HyperwalletErrorType, _ retry: (() -> Void)?) {
-        let errorView = ErrorView(viewController: self, error: error)
+        let errorView = ErrorView(viewController: self, error: error,  pageName: pageName, pageGroup: pageGroup)
         errorView.show(retry)
     }
 
@@ -204,11 +206,19 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
         show(genericTableView, sender: self)
     }
 
-    private func trackClick(title: String) {
-        let clickParams = ["hyperwallet_ea_country": title]
-        Insights.shared.trackClick(pageName: "\(self)",
-                                   pageGroup: "TransferMethod",
-                                   link: "Select \(title)",
+    func trackCountryClick() {
+        let clickParams = [InsightsTags.country: presenter.selectedCountry]
+        Insights.shared?.trackClick(pageName: pageName,
+                                   pageGroup: pageGroup,
+                                   link: "select-country",
+                                   clickParams: clickParams)
+    }
+
+    func trackCurrencyClick() {
+        let clickParams = [InsightsTags.currency: presenter.selectedCurrency]
+        Insights.shared?.trackClick(pageName: pageName,
+                                   pageGroup: pageGroup,
+                                   link: "select-currency",
                                    clickParams: clickParams)
     }
 }

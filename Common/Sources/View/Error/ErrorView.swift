@@ -22,17 +22,24 @@ import UIKit
 
 /// The class to handle UI errors
 public final class ErrorView {
-    weak var viewController: UIViewController!
-    var error: HyperwalletErrorType
+    private let errorTypeApi = "API"
+    private let errorTypeConnection = "CONNECTION"
+    private let errorTypeException = "EXCEPTION"
+    private weak var viewController: UIViewController!
+    private var error: HyperwalletErrorType
+    private var pageName: String
+    private var pageGroup: String
 
     /// Initializer to initialize the class with errors to be displayed and the viewcontroller responsible
     /// to display the errors
     /// - Parameters:
     ///   - viewController: view controller that contains errors
     ///   - error: hyperwallet error
-    public init(viewController: UIViewController, error: HyperwalletErrorType) {
+    public init(viewController: UIViewController, error: HyperwalletErrorType, pageName: String, pageGroup: String) {
         self.viewController = viewController
         self.error = error
+        self.pageName = pageName
+        self.pageGroup = pageGroup
     }
 
     /// To show error messages
@@ -41,7 +48,7 @@ public final class ErrorView {
     public func show(_ handler: (() -> Void)?) {
         switch error.group {
         case .business:
-            businessError()
+            businessError({ (_) in handler?() })
 
         case .connection:
             connectionError({ (_) in handler?() })
@@ -54,40 +61,38 @@ public final class ErrorView {
     /// To handle business errors
     ///
     /// - Parameter handler: to handle business error
-    public func businessError(_ handler: ((UIAlertAction) -> Void)? = nil) {
-        if let hyperwalletErrors = error.getHyperwalletErrors()?.errorList {
-            DispatchQueue.global().async {
-                for hyperwalletError in hyperwalletErrors {
-                    let errorInfo = ErrorInfo(type: EventConstants.errorTypeApi,
-                                              message: hyperwalletError.code,
-                                              fieldName: hyperwalletError.fieldName ?? "",
-                                              description: Thread.callStackSymbols.joined(separator: "\n"),
-                                              code: hyperwalletError.code)
-                    
-                    Insights.shared.trackError(pageName: "\(self.viewController)",
-                                               pageGroup: "Error",
-                                               errorInfo: errorInfo)
-                }
+    private func businessError(_ handler: ((UIAlertAction) -> Void)? = nil) {
+        let hyperwalletErrors = error.getHyperwalletErrors()?.errorList?.filter({ $0.fieldName == nil })
+        DispatchQueue.global().async {
+            hyperwalletErrors?.forEach { hyperwalletError in
+                let errorInfo = ErrorInfo(type: self.errorTypeApi,
+                                          message: hyperwalletError.code,
+                                          fieldName: hyperwalletError.fieldName ?? "",
+                                          description: Thread.callStackSymbols.joined(separator: "\n"),
+                                          code: hyperwalletError.code)
+
+                Insights.shared?.trackError(pageName: self.pageName,
+                                           pageGroup: self.pageGroup,
+                                           errorInfo: errorInfo)
             }
         }
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "error".localized(),
-                                       message: error.getHyperwalletErrors()?.errorList?
-                                                .filter { $0.fieldName == nil }
-                                                .map { $0.message }
-                                                .joined(separator: "\n"),
+                                       message: hyperwalletErrors?.map { $0.message }.joined(separator: "\n"),
                                        actions: UIAlertAction.close(handler))
     }
 
     private func unexpectedError() {
-        let errorInfo = ErrorInfo(type: EventConstants.errorTypeException,
-                                  message: error.errorDescription ?? "",
-                                  fieldName: "",
-                                  description: Thread.callStackSymbols.joined(separator: "\n"),
-                                  code: error.getHyperwalletErrors()?.errorList?.first?.code ?? "")
-        Insights.shared.trackError(pageName: "\(self.viewController)",
-                                   pageGroup: "Error",
-                                   errorInfo: errorInfo)
+        DispatchQueue.global().async {
+            let errorInfo = ErrorInfo(type: self.errorTypeException,
+                                      message: self.error.errorDescription ?? "",
+                                      fieldName: "",
+                                      description: Thread.callStackSymbols.joined(separator: "\n"),
+                                      code: self.error.getHyperwalletErrors()?.errorList?.first?.code ?? "")
+            Insights.shared?.trackError(pageName: self.pageName,
+                                       pageGroup: self.pageGroup,
+                                       errorInfo: errorInfo)
+        }
         HyperwalletUtilViews.showAlert(viewController,
                                        title: "unexpected_title".localized(),
                                        message: "unexpected_error_message".localized(),
@@ -95,13 +100,13 @@ public final class ErrorView {
     }
 
     private func connectionError(_ handler: @escaping (UIAlertAction) -> Void) {
-        let errorInfo = ErrorInfo(type: EventConstants.errorTypeConnection,
+        let errorInfo = ErrorInfo(type: self.errorTypeConnection,
                                   message: error.errorDescription ?? "",
                                   fieldName: "",
                                   description: Thread.callStackSymbols.joined(separator: "\n"),
                                   code: error.getHyperwalletErrors()?.errorList?.first?.code ?? "")
-        Insights.shared.trackError(pageName: "\(self.viewController)",
-                                   pageGroup: "Error",
+        Insights.shared?.trackError(pageName: pageName,
+                                   pageGroup: pageGroup,
                                    errorInfo: errorInfo)
         HyperwalletUtilViews.showAlertWithRetry(viewController,
                                                 title: "network_connection_error_title".localized(),
