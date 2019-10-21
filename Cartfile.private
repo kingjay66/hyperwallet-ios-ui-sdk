@@ -1,5 +1,5 @@
 github "JanGorman/Hippolyte" "0.8.0"
 github "httpswift/swifter" "1.4.6"
-git "git@github.com/hyperwallet/hyperwallet-ios-insights-sdk-sandbox.git" "1.0.0-beta01"
+git "git@github.com/hyperwallet/hyperwallet-ios-insights-sdk-sandbox.git" "master"
 
 

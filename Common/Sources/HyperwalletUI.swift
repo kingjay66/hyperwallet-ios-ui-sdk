@@ -32,14 +32,10 @@ public enum HyperwalletUIError: Int, Error {
 @objcMembers
 public final class HyperwalletUI: NSObject {
     private static var instance: HyperwalletUI?
-    public private(set) var userToken: String?
 
     /// Returns the previously initialized instance of the Hyperwallet UI SDK interface object
     public static var shared: HyperwalletUI {
         guard let instance = instance else {
-//            fatalError("Call HyperwalletUI.setup(_:) before accessing HyperwalletUI.shared")
-            let exception = NSException(name: NSExceptionName(rawValue: "arbitrary"), reason: "arbitrary reason", userInfo: nil)
-            exception.raise()
             fatalError("Call HyperwalletUI.setup(_:) before accessing HyperwalletUI.shared")
         }
         return instance
@@ -57,45 +53,25 @@ public final class HyperwalletUI: NSObject {
         })
     }
 
-    static func clearInstance() {
+    private static func clearInstance() {
         instance = nil
     }
 
     private init(_ provider: HyperwalletAuthenticationTokenProvider,
                  completion: @escaping (Error?) -> Void) {
         super.init()
-        Hyperwallet.setup(provider) { [weak self] configuration, error in
-            guard let strongSelf = self else {
-                return
-            }
+        Hyperwallet.setup(provider) { configuration, error in
             if let configuration = configuration {
-                strongSelf.userToken = configuration.userToken
-                if let userToken = strongSelf.userToken {
-                    Insights.setup(environment: "dev",
-                                   programToken: configuration.issuer,
-                                   sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
-                                   url: "url",
-                                   userToken: userToken)
-                }
+                Insights.setup(environment: "dev",
+                               programToken: configuration.issuer,
+                               sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
+                               url: "url",
+                               userToken: configuration.userToken)
             } else {
                 completion(error)
             }
         }
-//        UserRepositoryFactory.shared.userRepository().getUser {  [weak self] result in
-//            guard let strongSelf = self else {
-//                return
-//            }
-//            switch result {
-//            case .failure(let error):
-//                print("error fetching user: \(error)")
-//                completion(error)
-//
-//            case .success(let user):
-//                strongSelf.userToken = user?.token
-//                if let userToken = strongSelf.userToken {
-//                    Insights.setup(apiUrl: "https://api.paypal.com", userToken: userToken, programToken: programToken)
-//                }
-//            }
-//        }
+        UserRepositoryFactory.shared.userRepository().getUser {  _ in
+        }
     }
 }
