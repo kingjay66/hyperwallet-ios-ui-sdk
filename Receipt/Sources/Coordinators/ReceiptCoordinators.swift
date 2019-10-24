@@ -62,7 +62,7 @@ public class ListReceiptCoordinator: NSObject, HyperwalletCoordinator {
     }
 
     public func start(initializationData: [InitializationDataField: Any]? = nil, parentController: UIViewController) {
-        controller.coordinator = self
+        controller.listReciptCoordinator = self
         controller.initializationData = initializationData
         self.parentController = parentController
     }

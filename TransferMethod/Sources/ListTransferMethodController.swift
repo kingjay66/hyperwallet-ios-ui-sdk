@@ -109,8 +109,8 @@ final class ListTransferMethodController: UITableViewController {
     }
 
     private func addTransferMethod() {
-        coordinator?.navigateToNextPage(initializationData: nil)
-    }
+        listTransferCoordinator?.navigateToNextPage(initializationData: nil)
+      }
 
     private func setupTransferMethodTableView() {
         tableView = UITableView(frame: .zero, style: .grouped)

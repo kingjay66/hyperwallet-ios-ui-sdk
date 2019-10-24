@@ -59,11 +59,67 @@ extension UIViewController: HyperwalletFlowDelegate {
     @objc
     open func didFlowComplete(with response: Any) {
     }
+
     struct Holder {
         static var flowDelegate = [ObjectIdentifier: HyperwalletFlowDelegate]()
         static var coordinator =  [ObjectIdentifier: HyperwalletCoordinator]()
+        static var listTransferCoordinator: HyperwalletCoordinator?
+        static var selectTransferCoordinator: HyperwalletCoordinator?
+        static var addTransferCoordinator: HyperwalletCoordinator?
+        static var listReciptCoordinator: HyperwalletCoordinator?
+        static var createTransferCoordinator: HyperwalletCoordinator?
         static var initializationData = [ObjectIdentifier: [InitializationDataField: Any]]()
     }
+
+    public weak var listTransferCoordinator: HyperwalletCoordinator? {
+        get {
+            return  Holder.listTransferCoordinator
+        }
+
+        set(newValue) {
+                    Holder.listTransferCoordinator = newValue
+               }
+    }
+
+    public weak var selectTransferCoordinator: HyperwalletCoordinator? {
+        get {
+            return  Holder.selectTransferCoordinator
+        }
+
+        set(newValue) {
+                    Holder.selectTransferCoordinator = newValue
+               }
+    }
+
+    public weak var addTransferCoordinator: HyperwalletCoordinator? {
+         get {
+             return  Holder.addTransferCoordinator
+         }
+
+         set(newValue) {
+                     Holder.addTransferCoordinator = newValue
+                }
+     }
+
+    public weak var listReciptCoordinator: HyperwalletCoordinator? {
+         get {
+             return  Holder.listReciptCoordinator
+         }
+
+         set(newValue) {
+                     Holder.listReciptCoordinator = newValue
+                }
+     }
+
+    public weak var createTransferCoordinator: HyperwalletCoordinator? {
+          get {
+              return  Holder.createTransferCoordinator
+          }
+
+          set(newValue) {
+                      Holder.createTransferCoordinator = newValue
+                 }
+      }
 
     public weak var flowDelegate: HyperwalletFlowDelegate? {
         get {

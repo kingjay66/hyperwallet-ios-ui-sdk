@@ -38,7 +38,7 @@ public class CreateTransferCoordinator: NSObject, HyperwalletCoordinator  {
     }
 
     public func start(initializationData: [InitializationDataField: Any]? = nil, parentController: UIViewController) {
-        controller.coordinator = self
+        controller.createTransferCoordinator = self
         controller.initializationData = initializationData
         self.parentController = parentController
     }

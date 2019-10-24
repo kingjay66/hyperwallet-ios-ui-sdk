@@ -62,7 +62,7 @@ public class SelectTransferMethodTypeCoordinator: NSObject, HyperwalletCoordinat
     }
 
     public func start(initializationData: [InitializationDataField: Any]? = nil, parentController: UIViewController) {
-        controller.coordinator = self
+        controller.selectTransferCoordinator = self
         controller.initializationData = initializationData
         self.parentController = parentController
     }
@@ -104,7 +104,7 @@ public class AddTransferMethodCoordinator: NSObject, HyperwalletCoordinator {
     }
 
     public func start(initializationData: [InitializationDataField: Any]? = nil, parentController: UIViewController) {
-        controller.coordinator = self
+        controller.addTransferCoordinator = self
         controller.initializationData = initializationData
         self.parentController = parentController
     }
@@ -144,7 +144,7 @@ public final class ListTransferMethodsCoordinator: NSObject, HyperwalletCoordina
     }
 
     public func start(initializationData: [InitializationDataField: Any]? = nil, parentController: UIViewController) {
-        controller.coordinator = self
+        controller.listTransferCoordinator = self
         controller.initializationData = initializationData
         self.parentController = parentController
     }

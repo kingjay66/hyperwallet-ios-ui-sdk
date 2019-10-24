@@ -140,7 +140,7 @@ extension SelectTransferMethodTypeController: SelectTransferMethodTypeView {
         initializationData[InitializationDataField.profileType]  = profileType
         initializationData[InitializationDataField.transferMethodTypeCode]  = transferMethodTypeCode
         initializationData[InitializationDataField.forceUpdateData] = true
-        coordinator?.navigateToNextPage(initializationData: initializationData)
+        selectTransferCoordinator?.navigateToNextPage(initializationData: initializationData)
     }
 
     func showLoading() {
