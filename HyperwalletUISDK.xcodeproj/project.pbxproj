@@ -139,6 +139,7 @@
 		9807B76D226442C60028A280 /* UnexpectedErrorResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = DBFB61492261E84C00C4A8AA /* UnexpectedErrorResponse.json */; };
 		9840E24C234EAE4A0015A64E /* Insights.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9840E24B234EAE4A0015A64E /* Insights.framework */; };
 		9840E24D234EAE4A0015A64E /* Insights.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9840E24B234EAE4A0015A64E /* Insights.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		98BE243C23626A460056C5D1 /* HyperwalletInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BE243B23626A460056C5D1 /* HyperwalletInsights.swift */; };
 		98CE14BE235A3815001A96F1 /* InsightsTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CE14BD235A3815001A96F1 /* InsightsTags.swift */; };
 		98F3D754230C5BE400A8195F /* TransferFundsConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D747230C5ABB00A8195F /* TransferFundsConfirmation.swift */; };
 		98F3D755230C5BEC00A8195F /* TransferFundsSelectDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */; };
@@ -715,6 +716,7 @@
 		988547C92294B829007B312C /* ListReceiptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptController.swift; sourceTree = "<group>"; };
 		988547CB2294B879007B312C /* ListReceiptPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReceiptPresenter.swift; sourceTree = "<group>"; };
 		988547CF22970FA1007B312C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		98BE243B23626A460056C5D1 /* HyperwalletInsights.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperwalletInsights.swift; sourceTree = "<group>"; };
 		98CE14BD235A3815001A96F1 /* InsightsTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsTags.swift; sourceTree = "<group>"; };
 		98F3D744230C5AA800A8195F /* TransferUserFundsConfirmationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferUserFundsConfirmationTest.swift; sourceTree = "<group>"; };
 		98F3D746230C5ABB00A8195F /* TransferFundsSelectDestination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferFundsSelectDestination.swift; sourceTree = "<group>"; };
@@ -1450,6 +1452,14 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		98BE243A23626A2E0056C5D1 /* Insights */ = {
+			isa = PBXGroup;
+			children = (
+				98BE243B23626A460056C5D1 /* HyperwalletInsights.swift */,
+			);
+			path = Insights;
+			sourceTree = "<group>";
+		};
 		98CE14C0235A3917001A96F1 /* Insights */ = {
 			isa = PBXGroup;
 			children = (
@@ -1622,6 +1632,7 @@
 		DB551F4A22E1316400DD65C2 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				98BE243A23626A2E0056C5D1 /* Insights */,
 				DBCA382E225E8BA900CD4137 /* Extensions */,
 				DBCA383F225E8BAA00CD4137 /* Generics */,
 				DBCA3843225E8BAA00CD4137 /* Helper */,
@@ -3174,6 +3185,7 @@
 				A65312CD22FC037800A83D30 /* HyperwalletCoordinator.swift in Sources */,
 				DBC199EA22E29CD0004447DD /* UIColor.swift in Sources */,
 				DBC199EB22E29CD0004447DD /* UIFont.swift in Sources */,
+				98BE243C23626A460056C5D1 /* HyperwalletInsights.swift in Sources */,
 				DBC199EC22E29CD0004447DD /* UIImage.swift in Sources */,
 				DBC199ED22E29CD0004447DD /* UINavigationController.swift in Sources */,
 				DBC199EE22E29CD0004447DD /* UIToolbar.swift in Sources */,
