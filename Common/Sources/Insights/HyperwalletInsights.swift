@@ -44,14 +44,16 @@ public class HyperwalletInsights {
     }
 
     public func trackClick(pageName: String, pageGroup: String, link: String, params: [String: String]) {
-        if Insights.shared == nil {
-            initializeInsights { result in
-                if result {
-                    Insights.shared?.trackClick(pageName: pageName, pageGroup: pageGroup, link: link, clickParams: params)
+        DispatchQueue.global().async {
+            if Insights.shared == nil {
+                self.initializeInsights { result in
+                    if result {
+                        Insights.shared?.trackClick(pageName: pageName, pageGroup: pageGroup, link: link, clickParams: params)
+                    }
                 }
+            } else {
+                Insights.shared?.trackClick(pageName: pageName, pageGroup: pageGroup, link: link, clickParams: params)
             }
-        } else {
-             Insights.shared?.trackClick(pageName: pageName, pageGroup: pageGroup, link: link, clickParams: params)
         }
     }
 }

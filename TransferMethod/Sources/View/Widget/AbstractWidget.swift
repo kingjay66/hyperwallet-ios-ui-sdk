@@ -20,11 +20,14 @@
 import Common
 #endif
 import HyperwalletSDK
+import Insights
 import UIKit
 
 /// Represents the abstract widget input
 class AbstractWidget: UIStackView, UITextFieldDelegate {
-    var field: HyperwalletField!
+    private var pageName: String!
+    private var pageGroup: String!
+    private(set) var field: HyperwalletField!
 
     let label: UILabel = {
         let label = UILabel()
@@ -35,7 +38,7 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
         return label
     }()
 
-    required init(field: HyperwalletField) {
+    required init(field: HyperwalletField, pageName: String, pageGroup: String) {
         super.init(frame: CGRect())
         translatesAutoresizingMaskIntoConstraints = false
         axis = .horizontal
@@ -43,6 +46,8 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
         distribution = .fill
         isLayoutMarginsRelativeArrangement = true
         layoutMargins = UIEdgeInsets(top: 11.0, left: 0, bottom: 11.0, right: 16.0)
+        self.pageName = pageName
+        self.pageGroup = pageGroup
         self.field = field
         setupLayout(field: field)
     }
@@ -80,7 +85,15 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
     }
 
     func isValid() -> Bool {
-        return !isInvalidEmptyValue() && !isInvalidLength() && !isInvalidRegex()
+        var isValid = false
+        if isInvalidEmptyValue() || isInvalidLength() || isInvalidRegex() {
+            if let errorMessage = errorMessage() {
+                trackError(errorMessage: errorMessage, errorCode: "", errorType: "FORM", fieldName: name())
+            }
+        } else {
+            isValid = true
+        }
+        return isValid
     }
 
     func name() -> String {
@@ -88,7 +101,7 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
     }
 
     func setupLayout(field: HyperwalletField) {
-        label.accessibilityIdentifier = field.name ?? ""
+        label.accessibilityIdentifier = name()
         label.text = field.label ?? ""
         label.isUserInteractionEnabled = field.isEditable ?? true
         label.adjustsFontForContentSizeCategory = true
@@ -102,7 +115,7 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
 
     func showError() {
         label.textColor = Theme.Label.errorColor
-        label.accessibilityIdentifier = String(format: "%@_error", field.name ?? "")
+        label.accessibilityIdentifier = String(format: "%@_error", name())
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -120,6 +133,16 @@ class AbstractWidget: UIStackView, UITextFieldDelegate {
     //swiftlint:disable unavailable_function
     func value() -> String {
         fatalError("value() has not been implemented")
+    }
+
+    private func trackError(errorMessage: String, errorCode: String, errorType: String, fieldName: String) {
+        let errorInfo = ErrorInfo(type: errorType,
+                                  message: errorMessage,
+                                  fieldName: fieldName,
+                                  description: "",
+                                  code: errorCode)
+
+        Insights.shared?.trackError(pageName: pageName, pageGroup: pageGroup, errorInfo: errorInfo)
     }
 
     private func isInvalidEmptyValue() -> Bool {

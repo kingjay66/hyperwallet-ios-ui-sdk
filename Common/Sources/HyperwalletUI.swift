@@ -46,29 +46,19 @@ public final class HyperwalletUI: NSObject {
     ///
     /// - Parameter provider: a provider of Hyperwallet authentication tokens.
     public class func setup(_ provider: HyperwalletAuthenticationTokenProvider,
-                            completion: @escaping (HyperwalletUIError?) -> Void) {
-        instance = HyperwalletUI(provider, completion: { _ in
-            HyperwalletUI.clearInstance()
-            completion(HyperwalletUIError.notInitialized)
-        })
+                            completion: @escaping (Error?) -> Void) {
+        instance = HyperwalletUI(provider)
     }
 
-    private static func clearInstance() {
-        instance = nil
-    }
-
-    private init(_ provider: HyperwalletAuthenticationTokenProvider,
-                 completion: @escaping (Error?) -> Void) {
+    private init(_ provider: HyperwalletAuthenticationTokenProvider) {
         super.init()
-        Hyperwallet.setup(provider) { configuration, error in
+        Hyperwallet.setup(provider) { configuration, _ in
             if let configuration = configuration {
                 Insights.setup(environment: "dev",
                                programToken: configuration.issuer,
                                sdkVersion: HyperwalletBundle.currentSDKAppVersion ?? "",
                                url: "url",
                                userToken: configuration.userToken)
-            } else {
-                completion(error)
             }
         }
         UserRepositoryFactory.shared.userRepository().getUser {  _ in
