@@ -418,7 +418,7 @@ extension AddTransferMethodController: AddTransferMethodView {
                 else {
                     continue
             }
-            let newWidgets = fields.map(WidgetFactory.newWidget, pageName: pageName, pageGroup: pageGroup)
+            let newWidgets = fields.map{WidgetFactory.newWidget(field: $0, pageName: pageName, pageGroup: pageGroup)}
             let section = AddTransferMethodSectionData(
                 fieldGroup: fieldGroup,
                 country: presenter.country,
