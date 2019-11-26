@@ -33,6 +33,8 @@ before_install:
   - gem i slather
   # Install build output formatting tool
   - gem install xcpretty
+  - gem install jazzy
+  - jazzy --podspec HyperwalletUISDK.podspec
   # Force to update the Swiftlint to the last stable version
   - brew outdated swiftlint || brew upgrade swiftlint
   # Print the booted emulator
@@ -59,3 +61,4 @@ after_success:
  if [ "$code_coverage" == "YES" ]; then
       slather;
  fi
+ sh ./Scripts/travisPublishDocs.sh
