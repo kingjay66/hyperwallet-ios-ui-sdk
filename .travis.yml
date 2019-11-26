@@ -60,5 +60,5 @@ script: |
 after_success:
  if [ "$code_coverage" == "YES" ]; then
       slather;
+      sh ./Scripts/travisPublishDocs.sh;
  fi
- sh ./Scripts/travisPublishDocs.sh
