@@ -142,11 +142,19 @@ extension ListReceiptController: ListReceiptView {
                    pageName: String,
                    pageGroup: String,
                    _ retry: (() -> Void)?) {
-        let errorView = ErrorView(viewController: self,
-                                  error: error,
-                                  pageName: pageName,
-                                  pageGroup: pageGroup)
-        errorView.show(retry)
+        if let error = error.getAuthenticationError() {
+            DispatchQueue.global(qos: .userInteractive).async {
+                NotificationCenter.default.post(name: .authenticationError,
+                                                object: self,
+                                                userInfo: [UserInfo.authenticationError: error])
+            }
+        } else {
+            let errorView = ErrorView(viewController: self,
+                                      error: error,
+                                      pageName: pageName,
+                                      pageGroup: pageGroup)
+            errorView.show(retry)
+        }
     }
 
     private func toggleEmptyListView(hideLabel: Bool) {

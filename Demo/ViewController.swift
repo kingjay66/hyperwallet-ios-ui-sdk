@@ -88,6 +88,7 @@ class ViewController: UITableViewController {
         let userToken = Bundle.main.infoDictionary!["USER_TOKEN"] as! String
 
         createTransferMethodObserver()
+        createAuthenticationErrorObserver()
         removeTransferMethodObserver()
 
         // Setup
@@ -219,6 +220,13 @@ class ViewController: UITableViewController {
                                                object: nil)
     }
 
+    func createAuthenticationErrorObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(authenticationErrorOccurred(notification:)),
+                                               name: Notification.Name.authenticationError,
+                                               object: nil)
+    }
+
     func removeTransferMethodObserver() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(transferMethodDeactivated(notification:)),
@@ -242,6 +250,12 @@ class ViewController: UITableViewController {
     @objc
     func transferMethodDeactivated(notification: Notification) {
         print("Transfer method has been deleted successfully")
+    }
+
+    @objc
+    func authenticationErrorOccurred(notification: Notification) {
+        print("Authentication error occurred")
+        navigationController?.popToViewController(self, animated: true)
     }
 
     override public func didFlowComplete(with response: Any) {
