@@ -91,11 +91,23 @@ public final class ErrorView {
         HyperwalletInsights.shared.trackError(pageName: pageName,
                                               pageGroup: pageGroup,
                                               errorInfo: errorInfo)
-
-        HyperwalletUtilViews.showAlert(viewController,
-                                       title: "unexpected_title".localized(),
-                                       message: "unexpected_error_message".localized(),
-                                       actions: UIAlertAction.close(viewController))
+        if let error = error.getAuthenticationError() {
+            HyperwalletUtilViews.showAlert(viewController,
+                                           title: "unexpected_title".localized(),
+                                           message: "unexpected_error_message".localized(),
+                                           actions: UIAlertAction.close() { _ in
+                        DispatchQueue.global(qos: .userInteractive).async {
+                            NotificationCenter.default.post(name: .authenticationError,
+                                                            object: self,
+                                                            userInfo: [UserInfo.authenticationError: error])
+                        }
+            })
+        } else {
+            HyperwalletUtilViews.showAlert(viewController,
+                                           title: "unexpected_title".localized(),
+                                           message: "unexpected_error_message".localized(),
+                                           actions: UIAlertAction.close(viewController))
+        }
     }
 
     private func connectionError(_ handler: @escaping (UIAlertAction) -> Void) {

@@ -116,19 +116,11 @@ extension ListTransferDestinationController: ListTransferDestinationView {
                    pageName: String,
                    pageGroup: String,
                    _ retry: (() -> Void)?) {
-        if let error = error.getAuthenticationError() {
-            DispatchQueue.global(qos: .userInteractive).async {
-                NotificationCenter.default.post(name: .authenticationError,
-                                                object: self,
-                                                userInfo: [UserInfo.authenticationError: error])
-            }
-        } else {
-            let errorView = ErrorView(viewController: self,
-                                      error: error,
-                                      pageName: pageName,
-                                      pageGroup: pageGroup)
-            errorView.show(retry)
-        }
+        let errorView = ErrorView(viewController: self,
+                                  error: error,
+                                  pageName: pageName,
+                                  pageGroup: pageGroup)
+        errorView.show(retry)
     }
 
     func showLoading() {
