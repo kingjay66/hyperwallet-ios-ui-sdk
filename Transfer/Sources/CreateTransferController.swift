@@ -377,5 +377,6 @@ extension CreateTransferController {
     override func refreshView() {
         initializePresenter()
         presenter.loadCreateTransfer()
+//        setUpCreateTransferTableView()
     }
 }
