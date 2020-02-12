@@ -95,13 +95,13 @@ public final class ErrorView {
             HyperwalletUtilViews.showAlert(viewController,
                                            title: "unexpected_title".localized(),
                                            message: "unexpected_error_message".localized(),
-                                           actions: UIAlertAction.close() { _ in
+                                           actions: UIAlertAction.close { _ in
                         DispatchQueue.global(qos: .userInteractive).async {
                             NotificationCenter.default.post(name: .authenticationError,
                                                             object: self,
                                                             userInfo: [UserInfo.authenticationError: error])
                         }
-            })
+                                           })
         } else {
             HyperwalletUtilViews.showAlert(viewController,
                                            title: "unexpected_title".localized(),

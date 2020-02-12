@@ -79,6 +79,7 @@ class ViewController: UITableViewController {
     }
 
     private var exampleList: [Example: () -> Void]!
+    private var createTransferController: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -172,14 +173,19 @@ class ViewController: UITableViewController {
         let clientTransferId = UUID().uuidString.lowercased()
         let coordinator = HyperwalletUI.shared
             .createTransferFromUserCoordinator(clientTransferId: clientTransferId, parentController: self)
+        createTransferController = coordinator.getController()
         coordinator.navigate()
     }
 
     private func showExamplePrepaidCardReceipts() {
-        let prepaidCardToken = Bundle.main.infoDictionary!["PREPAID_CARD_TOKEN"] as! String
-        let coordinator = HyperwalletUI.shared
-            .listPrepaidCardReceiptCoordinator(parentController: self, prepaidCardToken: prepaidCardToken)
-        coordinator.navigate()
+        if let controller = createTransferController {
+            controller.initializationData?[InitializationDataField.clientTransferId] = UUID().uuidString.lowercased()
+            controller.refreshView()
+        }
+//        let prepaidCardToken = Bundle.main.infoDictionary!["PREPAID_CARD_TOKEN"] as! String
+//        let coordinator = HyperwalletUI.shared
+//            .listPrepaidCardReceiptCoordinator(parentController: self, prepaidCardToken: prepaidCardToken)
+//        coordinator.navigate()
     }
 
     private func showExampleUserReceipts() {
@@ -255,7 +261,9 @@ class ViewController: UITableViewController {
     @objc
     func authenticationErrorOccurred(notification: Notification) {
         print("Authentication error occurred")
-        navigationController?.popToViewController(self, animated: true)
+        DispatchQueue.main.async {
+            self.navigationController?.popToViewController(self, animated: true)
+        }
     }
 
     override public func didFlowComplete(with response: Any) {
