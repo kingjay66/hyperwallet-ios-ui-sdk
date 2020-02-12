@@ -57,6 +57,12 @@ extension UIViewController: HyperwalletFlowDelegate {
     @objc
     open func didFlowComplete(with response: Any) {
     }
+
+    /// To refresh data and view
+    @objc
+    open func refreshView() {
+    }
+
     struct Holder {
         static var flowDelegate = [ObjectIdentifier: HyperwalletFlowDelegate]()
         static var coordinator =  [ObjectIdentifier: HyperwalletCoordinator]()

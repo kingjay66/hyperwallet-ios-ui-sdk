@@ -153,3 +153,10 @@ extension ListReceiptController: ListReceiptView {
         emptyListLabel.isHidden = hideLabel
     }
 }
+
+extension ListReceiptController {
+    override func refreshView() {
+        initializePresenter()
+        presenter.listReceipts()
+    }
+}

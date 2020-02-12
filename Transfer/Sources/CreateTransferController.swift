@@ -307,7 +307,6 @@ extension CreateTransferController: CreateTransferView {
                    pageName: String,
                    pageGroup: String,
                    _ retry: (() -> Void)?) {
-
         let errorView = ErrorView(viewController: self,
                                   error: error,
                                   pageName: pageName,
@@ -371,5 +370,12 @@ extension CreateTransferController {
             coordinator?.navigateBackFromNextPage(with: statusTransition)
             flowDelegate?.didFlowComplete(with: statusTransition)
         }
+    }
+}
+
+extension CreateTransferController {
+    override func refreshView() {
+        initializePresenter()
+        presenter.loadCreateTransfer()
     }
 }
