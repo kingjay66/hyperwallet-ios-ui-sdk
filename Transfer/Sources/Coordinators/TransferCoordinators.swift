@@ -49,13 +49,7 @@ public class CreateTransferCoordinator: NSObject, HyperwalletCoordinator  {
 
     @objc
     public func navigate() {
-        if let navigationController = parentController?.navigationController {
-            navigationController.pushViewController(controller, animated: true)
-        } else {
-            _ = UINavigationController(rootViewController: controller)
-            parentController?.present(controller, animated: true, completion: nil)
-        }
-//        parentController?.show(controller, sender: parentController)
+        parentController?.show(controller, sender: parentController)
     }
 
     public func navigateToNextPage(initializationData: [InitializationDataField: Any]? = nil) {
