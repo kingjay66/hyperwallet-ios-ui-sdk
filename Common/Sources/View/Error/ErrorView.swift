@@ -57,11 +57,24 @@ public final class ErrorView {
             connectionError({ (_) in handler?() })
 
         default:
-            unexpectedError()
+            if let error = error.getAuthenticationError() {
+                authenticationError(error)
+            } else {
+                unexpectedError()
+            }
         }
     }
 
-    /// To handle business errors
+    private func authenticationError(_ error: HyperwalletAuthenticationErrorType) {
+        HyperwalletUtilViews.showAlert(viewController,
+                                       title: "authentication_error_title".localized(),
+                                       message: error.message(),
+                                       actions: UIAlertAction.close() { _ in
+                                        self.viewController.didFlowComplete(with: error)
+                                        }
+        )
+    }
+
     private func businessError() {
         if let error = error.getHyperwalletErrors()?.errorList?.first {
             let errorInfo = ErrorInfoBuilder(type: errorTypeApi,

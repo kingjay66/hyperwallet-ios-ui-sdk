@@ -54,7 +54,7 @@ public class Theme: NSObject {
     /// Representation of all customizable visual style property for `UINavigationBar`.
     public struct NavigationBar {
         /// The `UINavigationBar` bar style
-        public static var barStyle = UIBarStyle.black
+        public static var barStyle = UIBarStyle.default
         /// Sets the opaque background color
         public static var isTranslucent = false
         /// The color of NavigationBar shadow
@@ -131,7 +131,7 @@ public class Theme: NSObject {
     /// Representation of all customizable visual style property for `UIViewController`.
     public struct ViewController {
         /// The `UIViewController` background color
-        public static var backgroundColor = UIColor(rgb: 0xEFEFF4)
+        public static var backgroundColor = UIColor.groupTableViewBackground
     }
 
     /// Representation of all customizable visual style property for `SpinnerView`.

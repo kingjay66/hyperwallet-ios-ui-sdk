@@ -209,10 +209,12 @@ extension ListTransferMethodController: ListTransferMethodView {
 extension ListTransferMethodController {
     /// The callback to refresh transfer method list
     override public func didFlowComplete(with response: Any) {
+        coordinator?.navigateBackFromNextPage(with: response)
         if response as? HyperwalletTransferMethod != nil {
-            coordinator?.navigateBackFromNextPage(with: response)
             // refresh transfer method list
             presenter.listTransferMethods()
+        } else if let authenticationError = response as? HyperwalletAuthenticationErrorType {
+            flowDelegate?.didFlowComplete(with: authenticationError)
         }
     }
 }

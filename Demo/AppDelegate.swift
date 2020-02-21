@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
        // ThemeManager.applyWhiteTheme()
-        ThemeManager.applyTheme()
+        ThemeManager.applyWhiteTheme()
         // Avoid to display a black area during the view transaction in the UINavigationBar.
         window?.backgroundColor = Theme.ViewController.backgroundColor
         // Set the default tint color

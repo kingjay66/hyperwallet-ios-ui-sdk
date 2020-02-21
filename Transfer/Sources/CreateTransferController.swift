@@ -360,15 +360,15 @@ extension CreateTransferController: CreateTransferView {
 extension CreateTransferController {
     /// To reload create transfer method
     override public func didFlowComplete(with response: Any) {
+        coordinator?.navigateBackFromNextPage(with: response)
         if let transferMethod = response as? HyperwalletTransferMethod {
-            coordinator?.navigateBackFromNextPage(with: transferMethod)
+//            coordinator?.navigateBackFromNextPage(with: transferMethod)
             presenter.selectedTransferMethod = transferMethod
             presenter.amount = nil
             presenter.transferAllFundsIsOn = false
             presenter.loadCreateTransfer()
-        } else if let statusTransition = response as? HyperwalletStatusTransition {
-            coordinator?.navigateBackFromNextPage(with: statusTransition)
-            flowDelegate?.didFlowComplete(with: statusTransition)
+        } else {
+            flowDelegate?.didFlowComplete(with: response)
         }
     }
 }

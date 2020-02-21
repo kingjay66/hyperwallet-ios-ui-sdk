@@ -277,6 +277,8 @@ class ViewController: UITableViewController {
             if transition == HyperwalletStatusTransition.Status.scheduled {
                 navigationController?.popViewController(animated: false)
             }
+        } else if response is HyperwalletAuthenticationErrorType {
+            navigationController?.popToRootViewController(animated: false)
         }
     }
 }
